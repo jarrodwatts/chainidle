@@ -48,7 +48,7 @@ const Home: NextPage = () => {
           </li>
           <li>
             <Typography variant="body1">
-              Craft unique ERC-721 "upgraded tools" from the forgery
+              Craft unique ERC-721 &quot;upgraded tools&quot; from the forgery
             </Typography>
           </li>
           <li>
