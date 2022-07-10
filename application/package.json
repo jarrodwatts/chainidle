@@ -9,14 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@thirdweb-dev/react": "latest",
-    "@thirdweb-dev/sdk": "latest",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "@thirdweb-dev/react": "latest",
+    "@thirdweb-dev/sdk": "latest",
+    "ethers": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
