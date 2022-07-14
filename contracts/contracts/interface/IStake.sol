@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
-import "@thirdweb-dev/contracts/interfaces/token/ITokenERC20.sol";
 import "./ITool.sol";
 import "./IReward.sol";
 
