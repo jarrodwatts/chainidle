@@ -1,12 +1,16 @@
 import { Grid } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import characterProperties from "../../const/character";
+import Character from "../../types/Character";
 
 type Props = {
   property: typeof characterProperties[keyof typeof characterProperties];
   file: string;
   col: number;
   row: number;
+  index: number;
+  character: Character;
+  setCharacter: (character: Character) => void;
 };
 
 export default function CharacterPropertyOption({
@@ -14,6 +18,9 @@ export default function CharacterPropertyOption({
   file,
   col,
   row,
+  index,
+  character,
+  setCharacter,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -22,7 +29,11 @@ export default function CharacterPropertyOption({
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
+
       if (ctx) {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         const spriteSheet = new Image();
         spriteSheet.src = `${property.path}${file}`;
         spriteSheet.onload = () => {
@@ -44,20 +55,32 @@ export default function CharacterPropertyOption({
   }, [canvasRef, col, file, property, row]);
 
   return (
-    <Grid
-      container
-      item
-      alignItems="center"
-      justifyContent="center"
-      sx={{ mx: 2 }}
-    >
-      <Grid item style={{ border: "1px solid grey", borderRadius: 16 }}>
-        {/* Preview */}
+    <Grid item alignItems="center">
+      <Grid
+        item
+        role="button"
+        style={{
+          border: "1px solid grey",
+          borderRadius: 16,
+          cursor: "pointer",
+        }}
+        onClick={() =>
+          setCharacter({
+            ...character,
+            [property.name]: {
+              // Set the color and the type now. If there is an existing one, just update it's type.
+              type: index,
+              // if there was a color, then use that. Otherwise, use the default color 0
+              color: character[property.name]?.color ?? 0,
+            },
+          })
+        }
+      >
         <canvas
           ref={canvasRef}
           style={{
-            height: 128,
-            width: 128,
+            height: 96,
+            width: 96,
           }}
         />
       </Grid>
