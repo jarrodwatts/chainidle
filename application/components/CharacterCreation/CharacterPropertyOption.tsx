@@ -60,19 +60,26 @@ export default function CharacterPropertyOption({
         item
         role="button"
         style={{
-          border: "1px solid grey",
+          border: "1px solid",
+          // Highlighted if selected
+          borderColor:
+            character?.[property.name]?.type === index ? "green" : "black",
           borderRadius: 16,
           cursor: "pointer",
         }}
         onClick={() =>
           setCharacter({
             ...character,
-            [property.name]: {
-              // Set the color and the type now. If there is an existing one, just update it's type.
-              type: index,
-              // if there was a color, then use that. Otherwise, use the default color 0
-              color: character[property.name]?.color ?? 0,
-            },
+            [property.name]:
+              character?.[property.name]?.type == index &&
+              property.name !== "base"
+                ? undefined
+                : {
+                    // Set the color and the type now. If there is an existing one, just update it's type.
+                    type: index,
+                    // if there was a color, then use that. Otherwise, use the default color 0
+                    color: character[property.name]?.color ?? 0,
+                  },
           })
         }
       >

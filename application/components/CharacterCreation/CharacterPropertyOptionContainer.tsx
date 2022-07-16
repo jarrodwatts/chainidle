@@ -52,7 +52,9 @@ export default function CharacterPropertyOptionContainer({
               borderRadius: "50%",
               height: 32,
               marginRight: 4,
-              border: `1px solid grey`,
+              border: `3px solid`,
+              borderColor:
+                character[itemCategory]?.color === i ? "green" : "transparent",
               backgroundColor: colorNameToHexMapping[itemCategory][c],
             }}
           />
