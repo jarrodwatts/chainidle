@@ -1,8 +1,8 @@
-import { Grid } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import characterProperties from "../../const/character";
 import Character from "../../types/Character";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
+
 type Props = {
   character: Character;
 };
@@ -30,7 +30,9 @@ export default function CharacterPreview({ character }: Props) {
         (
           Object.keys(character) as Array<keyof typeof characterProperties>
         ).forEach((key) => {
-          if (character[key] === undefined) return;
+          if (character[key] === undefined) {
+            return;
+          }
 
           // Get the relevant spritesheet for that key from the object
           const spriteSheet = new Image();
@@ -86,28 +88,17 @@ export default function CharacterPreview({ character }: Props) {
   }, [selectedItemImages]);
 
   return (
-    <Grid item alignItems="center" justifyContent="center">
-      <Grid
-        container
-        alignItems="center"
-        justifyContent="center"
-        item
-        style={{
-          border: "1px solid grey",
-          borderRadius: 16,
-          width: 256,
-          height: 256,
-          position: "fixed",
-        }}
-      >
-        <canvas
-          ref={canvasRef}
-          style={{
-            height: "100%",
-            width: "100%",
-          }}
-        />
-      </Grid>
-    </Grid>
+    <canvas
+      ref={canvasRef}
+      style={{
+        border: "1px solid grey",
+        borderRadius: 16,
+        width: 256,
+        height: 256,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    />
   );
 }

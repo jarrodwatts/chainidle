@@ -1,0 +1,8 @@
+@font-face {
+  font-family: "kongtext";
+  src: url("/fonts/kongtext.ttf");
+}
+
+.gameFont {
+  font-family: "kongtext";
+}

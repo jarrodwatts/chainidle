@@ -3,15 +3,15 @@ import { createTheme, responsiveFontSizes } from "@mui/material";
 const theme = createTheme({
   palette: {
     background: {
-      paper: "#1d1d1d",
-      default: "#090909",
+      paper: "#3a3544",
+      default: "#302c2e",
     },
     primary: {
-      main: "#9e61ff",
+      main: "#ea9c5f",
       contrastText: "#fff",
     },
     secondary: {
-      main: "#619bff",
+      main: "#488d9b",
       contrastText: "#fff",
     },
     error: {
@@ -20,7 +20,7 @@ const theme = createTheme({
     },
     text: {
       primary: "#fff",
-      secondary: "rgba(255, 255, 255, 0.7)",
+      secondary: "rgba(255, 255, 255, 1)",
       disabled: "rgba(255, 255, 255, 0.38)",
     },
   },
@@ -29,7 +29,7 @@ const theme = createTheme({
       textTransform: "none",
     },
     fontFamily: [
-      "Inter",
+      "kongtext",
       "ui-sans-serif",
       "system-ui",
       "-apple-system",
@@ -46,7 +46,7 @@ const theme = createTheme({
       "Noto Color Emoji",
     ].join(","),
     h1: {
-      fontSize: "4rem",
+      fontSize: "3rem",
       fontWeight: 700,
       lineHeight: 1,
       color: "#fff",
@@ -54,28 +54,28 @@ const theme = createTheme({
     h2: {
       letterSpacing: "-.025em",
       fontWeight: 700,
-      fontSize: "3rem",
+      fontSize: "2rem",
       color: "#fff",
     },
     h3: {
       color: "#fff",
       fontWeight: 600,
-      fontSize: "2rem",
+      fontSize: "1.25rem",
       lineHeight: 1.75,
     },
     h4: {
-      color: "rgba(255, 255, 255, 0.7)",
+      color: "rgba(255, 255, 255, 0.9)",
       fontWeight: 300,
       fontSize: 20,
       lineHeight: 1.6,
     },
     body1: {
-      fontSize: "1.125rem",
+      fontSize: "1rem",
       lineHeight: 1.75,
       color: "#d1d5db",
     },
     body2: {
-      fontSize: "1rem",
+      fontSize: "0.9rem",
       lineHeight: 1.75,
       color: "#9CA3AF",
     },
