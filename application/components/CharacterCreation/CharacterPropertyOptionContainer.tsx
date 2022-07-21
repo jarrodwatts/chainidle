@@ -68,7 +68,7 @@ export default function CharacterPropertyOptionContainer({
               borderColor:
                 character[itemCategory]?.color === i
                   ? theme.palette.primary.main
-                  : "transparent",
+                  : "rgba(255,255,255,0.3)",
               backgroundColor: colorNameToHexMapping[itemCategory][c],
             }}
           />
