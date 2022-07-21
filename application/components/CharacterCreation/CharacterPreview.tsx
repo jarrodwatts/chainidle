@@ -2,17 +2,19 @@ import React, { useEffect, useRef, useState } from "react";
 import characterProperties from "../../const/character";
 import Character from "../../types/Character";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 type Props = {
   character: Character;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 };
 
-export default function CharacterPreview({ character }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
+export default function CharacterPreview({ character, canvasRef }: Props) {
   const [selectedItemImages, setSelectedItemImages] = useState<{
     [key: string]: HTMLImageElement;
   }>({});
+
+  const mobileScreenQuery = useMediaQuery("(max-width:900px)");
 
   // Crop and draw the image on the canvas
   useEffect(() => {
@@ -93,8 +95,8 @@ export default function CharacterPreview({ character }: Props) {
       style={{
         border: "1px solid grey",
         borderRadius: 16,
-        width: 256,
-        height: 256,
+        width: mobileScreenQuery ? 128 : 196,
+        height: mobileScreenQuery ? 128 : 196,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

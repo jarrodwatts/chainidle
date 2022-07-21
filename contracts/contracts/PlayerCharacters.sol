@@ -7,12 +7,12 @@ import "@thirdweb-dev/contracts/extension/Permissions.sol";
 /**
     This is the player NFT Drop contract.
     - It is an ERC-721A NFT Collection contract that contains lazy-minted "player" NFTs with on-chain metadata.
-    - It implements thirdweb contracts to make it "droppable", meaning other wallets can claim/mint the lazy-minted NFTs.
     - Each player NFT contains a variable amount of mappings that represent the player's skill experience.
 
     For example, a player can have a mapping for "strength" with a value of 500, and a mapping for "agility" with a value of 321.
     These metadata mappings must ONLY be updatable by the permitted roles configured.
 */
+
 contract PlayerCharacters is ERC721SignatureMint, Permissions {
     // Mapping of token ID -> mapping of skill -> experience.
     mapping (uint256 => mapping(string => uint256)) public playerSkillExperience;

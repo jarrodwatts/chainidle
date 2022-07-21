@@ -1,6 +1,7 @@
-import { Grid } from "@mui/material";
+import { Grid, useMediaQuery } from "@mui/material";
 import React, { useEffect, useRef } from "react";
 import characterProperties from "../../const/character";
+import theme from "../../const/mui/theme";
 import Character from "../../types/Character";
 
 type Props = {
@@ -23,6 +24,7 @@ export default function CharacterPropertyOption({
   setCharacter,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mobileScreenQuery = useMediaQuery("(max-width:900px)");
 
   // Crop and draw the image on the canvas
   useEffect(() => {
@@ -60,10 +62,12 @@ export default function CharacterPropertyOption({
         item
         role="button"
         style={{
-          border: "1px solid",
+          border: "2px solid",
           // Highlighted if selected
           borderColor:
-            character?.[property.name]?.type === index ? "green" : "black",
+            character?.[property.name]?.type === index
+              ? theme.palette.primary.main
+              : "rgba(0,0,0,0.5)",
           borderRadius: 16,
           cursor: "pointer",
         }}
@@ -86,8 +90,8 @@ export default function CharacterPropertyOption({
         <canvas
           ref={canvasRef}
           style={{
-            height: 96,
-            width: 96,
+            height: mobileScreenQuery ? 64 : 96,
+            width: mobileScreenQuery ? 64 : 96,
           }}
         />
       </Grid>

@@ -4,4 +4,4 @@ import { ChainId } from "@thirdweb-dev/sdk";
 const env = process.env.NODE_ENV;
 
 export const CHAIN_ID =
-  env === "development" ? ChainId.Mumbai : ChainId.Polygon;
+  env === "development" ? ChainId.Goerli : ChainId.Polygon;

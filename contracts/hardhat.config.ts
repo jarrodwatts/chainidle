@@ -6,7 +6,15 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.11",
+  solidity: {
+    version: "0.8.11",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1,
+      },
+    },
+  },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",

@@ -1,12 +1,23 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { useAddress, useContract, useMetamask } from "@thirdweb-dev/react";
+import React, { useRef, useState } from "react";
 import characterProperties from "../../const/character";
 import theme from "../../const/mui/theme";
 import Character from "../../types/Character";
 import CharacterPreview from "./CharacterPreview";
 import CharacterPropertyOptionContainer from "./CharacterPropertyOptionContainer";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function CharacterCreationContainer() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mobileScreenQuery = useMediaQuery("(max-width:1200px)");
+  const address = useAddress();
+  const connectWallet = useMetamask();
+
+  const { contract } = useContract(
+    "0x6F22d378d328C691E0B786a3f2f5Ff474f6AD35e"
+  );
+
   const [character, setCharacter] = useState<Character>({
     base: {
       color: 0,
@@ -15,6 +26,33 @@ export default function CharacterCreationContainer() {
   });
 
   console.log(character);
+
+  async function mintCharacter() {
+    console.log("minting character");
+
+    if (!canvasRef || !canvasRef.current) {
+      return;
+    }
+
+    // Base 64 encode the canvas
+    const characterImage = canvasRef.current.toDataURL();
+
+    // Send the request to the server
+    const response = await fetch("/api/generate-mint-signature-for-character", {
+      method: "POST",
+      body: JSON.stringify({
+        address,
+        character,
+        characterImage,
+      }),
+    });
+
+    const signedPayload = await response.json();
+
+    console.log(signedPayload);
+
+    const nft = await contract?.nft.signature.mint(signedPayload);
+  }
 
   return (
     <Box
@@ -40,7 +78,7 @@ export default function CharacterCreationContainer() {
           direction="row"
           xs={12}
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent={mobileScreenQuery ? "center" : "space-between"}
           style={{
             marginTop: 32,
             position: "sticky",
@@ -53,20 +91,25 @@ export default function CharacterCreationContainer() {
           spacing={2}
         >
           <Grid item>
-            <Typography variant="h2">Character Creation</Typography>
-
-            <Typography variant="body1" sx={{ my: 2 }}>
-              Select the attributes of your character NFT
+            <Typography variant="h2" style={{ textAlign: "center" }}>
+              Character Creation
             </Typography>
+
+            {!mobileScreenQuery && (
+              <Typography variant="body1" sx={{ my: 2 }}>
+                Select the attributes of your character NFT
+              </Typography>
+            )}
           </Grid>
-          <Grid item direction="column" alignItems="center" sx={{ mb: 1 }}>
-            <Grid item>
-              <CharacterPreview character={character} />
+          <Grid item sx={{ mb: 1 }}>
+            <Grid container justifyContent="center" item>
+              <CharacterPreview character={character} canvasRef={canvasRef} />
             </Grid>
             <Grid item>
               <Button
                 variant="contained"
                 color="primary"
+                onClick={() => (address ? mintCharacter() : connectWallet())}
                 sx={{
                   mt: 2,
                   display: "flex",
@@ -74,7 +117,7 @@ export default function CharacterCreationContainer() {
                   height: 48,
                 }}
               >
-                Mint My NFT
+                {address ? "Mint My NFT" : "Connect Wallet"}
               </Button>
             </Grid>
           </Grid>

@@ -1,7 +1,8 @@
-import { capitalize, Grid, Typography } from "@mui/material";
+import { capitalize, Grid, Typography, useMediaQuery } from "@mui/material";
 import React from "react";
 import characterProperties from "../../const/character";
 import colorNameToHexMapping from "../../const/colorNameToHexMapping";
+import theme from "../../const/mui/theme";
 import Character from "../../types/Character";
 import CharacterPropertyOption from "./CharacterPropertyOption";
 
@@ -16,6 +17,8 @@ export default function CharacterPropertyOptionContainer({
   character,
   setCharacter,
 }: Props) {
+  const mobileScreenQuery = useMediaQuery("(max-width:900px)");
+
   return (
     <Grid item>
       <Grid
@@ -44,17 +47,28 @@ export default function CharacterPropertyOptionContainer({
                     color: i,
                   },
                 });
+              } else {
+                // If they select a color when type is not set, set type to 0
+                setCharacter({
+                  ...character,
+                  [itemCategory]: {
+                    type: 0,
+                    color: i,
+                  },
+                });
               }
             }}
             style={{
               cursor: "pointer",
-              width: 32,
+              width: mobileScreenQuery ? 16 : 32,
               borderRadius: "50%",
-              height: 32,
+              height: mobileScreenQuery ? 16 : 32,
               marginRight: 4,
               border: `3px solid`,
               borderColor:
-                character[itemCategory]?.color === i ? "green" : "transparent",
+                character[itemCategory]?.color === i
+                  ? theme.palette.primary.main
+                  : "transparent",
               backgroundColor: colorNameToHexMapping[itemCategory][c],
             }}
           />
