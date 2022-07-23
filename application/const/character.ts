@@ -1,9 +1,18 @@
 const characterProperties = {
   base: {
     name: "base",
-    path: `/cozy-people-asset-pack/0-base/`,
-    files: ["char_all.png"],
-    colors: ["1", "2", "3", "4", "5", "6", "7", "8"],
+    path: `0-base`,
+    files: [
+      "char1.png",
+      "char2.png",
+      "char3.png",
+      "char4.png",
+      "char5.png",
+      "char6.png",
+      "char7.png",
+      "char8.png",
+    ],
+    colors: ["1"],
     frameSize: {
       x: 32,
       y: 32,
@@ -13,7 +22,7 @@ const characterProperties = {
   },
   eyes: {
     name: "eyes",
-    path: `/cozy-people-asset-pack/1-eyes/`,
+    path: `1-eyes`,
     files: ["eyes.png"],
     colors: [
       "brown",
@@ -40,8 +49,8 @@ const characterProperties = {
   },
   blush: {
     name: "blush",
-    path: `/cozy-people-asset-pack/2-blush/`,
-    files: ["blush_all.png"],
+    path: `2-blush`,
+    files: ["blush.png"],
     colors: ["1", "2", "3", "4", "5"],
     frameSize: {
       x: 32,
@@ -52,7 +61,7 @@ const characterProperties = {
   },
   lipstick: {
     name: "lipstick",
-    path: `/cozy-people-asset-pack/3-lipstick/`,
+    path: `3-lipstick`,
     files: ["lipstick.png"],
     colors: ["1", "2", "3", "4", "5"],
     frameSize: {
@@ -64,7 +73,7 @@ const characterProperties = {
   },
   upper: {
     name: "upper",
-    path: `/cozy-people-asset-pack/4-upper/`,
+    path: `4-upper`,
     files: [
       "basic.png",
       "floral.png",
@@ -95,7 +104,7 @@ const characterProperties = {
   },
   lower: {
     name: "lower",
-    path: `/cozy-people-asset-pack/5-lower/`,
+    path: `5-lower`,
     files: ["dress.png", "pants_suit.png", "pants.png", "skirt.png"],
     colors: [
       "black",
@@ -118,7 +127,7 @@ const characterProperties = {
   },
   bodysuit: {
     name: "bodysuit",
-    path: `/cozy-people-asset-pack/6-bodysuit/`,
+    path: `6-bodysuit`,
     files: ["clown.png", "pumpkin.png", "spooky.png", "witch.png"],
     colors: ["1"],
     frameSize: {
@@ -130,7 +139,7 @@ const characterProperties = {
   },
   shoes: {
     name: "shoes",
-    path: `/cozy-people-asset-pack/7-shoes/`,
+    path: `7-shoes`,
     files: ["shoes.png"],
     colors: [
       "black",
@@ -153,7 +162,7 @@ const characterProperties = {
   },
   hair: {
     name: "hair",
-    path: `/cozy-people-asset-pack/8-hair/`,
+    path: `8-hair`,
     files: [
       "bob.png",
       "braids.png",
@@ -196,7 +205,7 @@ const characterProperties = {
   },
   beard: {
     name: "beard",
-    path: `/cozy-people-asset-pack/9-beard/`,
+    path: `9-beard`,
     files: ["beard.png"],
     colors: [
       "brown",
@@ -223,7 +232,7 @@ const characterProperties = {
   },
   glasses: {
     name: "glasses",
-    path: `/cozy-people-asset-pack/a-glasses/`,
+    path: `a-glasses`,
     files: ["glasses.png", "glasses_sun.png"],
     colors: [
       "black",
@@ -246,7 +255,7 @@ const characterProperties = {
   },
   earring: {
     name: "earring",
-    path: `/cozy-people-asset-pack/b-earring/`,
+    path: `b-earring`,
     files: [
       "earring_emerald_silver.png",
       "earring_emerald.png",
@@ -263,7 +272,7 @@ const characterProperties = {
   },
   hat: {
     name: "hat",
-    path: `/cozy-people-asset-pack/c-hat/`,
+    path: `c-hat`,
     files: [
       "hat_cowboy.png",
       "hat_lucky.png",
@@ -281,7 +290,7 @@ const characterProperties = {
   },
   mask: {
     name: "mask",
-    path: `/cozy-people-asset-pack/d-mask/`,
+    path: `d-mask`,
     files: ["mask_clown_blue.png", "mask_clown_red.png", "mask_spooky.png"],
     colors: ["1"],
     frameSize: {

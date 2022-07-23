@@ -37,7 +37,7 @@ export default function CharacterPropertyOption({
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const spriteSheet = new Image();
-        spriteSheet.src = `${property.path}${file}`;
+        spriteSheet.src = `/cozy-people-asset-pack/${property.path}/${file}`;
         spriteSheet.onload = () => {
           //  Draw 32 x 32 size image
           ctx.drawImage(

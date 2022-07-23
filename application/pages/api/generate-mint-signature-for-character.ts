@@ -1,5 +1,6 @@
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 import Character from "../../types/Character";
 
 export default async function generateMintSignature(
@@ -22,9 +23,7 @@ export default async function generateMintSignature(
 
   const thirdweb = ThirdwebSDK.fromPrivateKey(PK, "goerli");
 
-  const contract = await thirdweb.getContract(
-    "0x6F22d378d328C691E0B786a3f2f5Ff474f6AD35e"
-  );
+  const contract = await thirdweb.getContract(PLAYER_CHARACTERS_ADDRESS);
 
   const signature = await contract.nft.signature.generate({
     metadata: {

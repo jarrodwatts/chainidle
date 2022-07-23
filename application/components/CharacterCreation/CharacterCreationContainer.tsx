@@ -7,6 +7,7 @@ import Character from "../../types/Character";
 import CharacterPreview from "./CharacterPreview";
 import CharacterPropertyOptionContainer from "./CharacterPropertyOptionContainer";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 
 export default function CharacterCreationContainer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,9 +15,7 @@ export default function CharacterCreationContainer() {
   const address = useAddress();
   const connectWallet = useMetamask();
 
-  const { contract } = useContract(
-    "0x6F22d378d328C691E0B786a3f2f5Ff474f6AD35e"
-  );
+  const { contract } = useContract(PLAYER_CHARACTERS_ADDRESS);
 
   const [character, setCharacter] = useState<Character>({
     base: {

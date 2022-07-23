@@ -7,9 +7,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 type Props = {
   character: Character;
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  style?: React.CSSProperties;
 };
 
-export default function CharacterPreview({ character, canvasRef }: Props) {
+export default function CharacterPreview({
+  character,
+  canvasRef,
+  style,
+}: Props) {
   const [selectedItemImages, setSelectedItemImages] = useState<{
     [key: string]: HTMLImageElement;
   }>({});
@@ -25,8 +30,6 @@ export default function CharacterPreview({ character, canvasRef }: Props) {
         // Clear canvas first
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        console.log(character);
-
         // character has multiple keys (e.g. "base", "hat", "hair", etc.)
         // so we need to iterate over all of them
         (
@@ -38,19 +41,18 @@ export default function CharacterPreview({ character, canvasRef }: Props) {
 
           // Get the relevant spritesheet for that key from the object
           const spriteSheet = new Image();
-          const src = `${characterProperties[key].path}${
-            characterProperties[key].files[character[key]?.type as number]
-          }`;
-
-          console.log(src);
+          const src = `/cozy-people-asset-pack/${
+            characterProperties[key].path
+          }/${characterProperties[key].files[character[key]?.type as number]}`;
 
           spriteSheet.src = src;
           // On load of the image
           spriteSheet.onload = () => {
-            setSelectedItemImages({
-              ...selectedItemImages,
+            // set state using the current state and the image
+            setSelectedItemImages((oldState) => ({
+              ...oldState,
               [key]: spriteSheet,
-            });
+            }));
           };
         });
       }
@@ -100,6 +102,7 @@ export default function CharacterPreview({ character, canvasRef }: Props) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        ...style,
       }}
     />
   );
