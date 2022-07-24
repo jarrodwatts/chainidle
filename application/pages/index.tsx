@@ -18,23 +18,10 @@ const Home: NextPage = () => {
       color: 0,
       type: 7,
     },
-    // eyes: {
-    //   color: 5,
-    //   type: 0,
-    // },
-    // blush: {
-    //   color: 3,
-    //   type: 0,
-    // },
-    // lipstick: undefined,
     upper: {
       color: 3,
       type: 4,
     },
-    // lower: {
-    //   color: 6,
-    //   type: 3,
-    // },
   });
 
   const generateRandomCharacter = () => {
