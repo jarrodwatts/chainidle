@@ -42,6 +42,11 @@ contract Pickaxes is DropERC1155, ITool {
 
     }
 
+    function ownsToken(uint256 _tokenId, address _address) public view override(ITool) returns (bool) {
+        uint256 bal = ERC1155Upgradeable.balanceOf(_address, _tokenId);
+        return bal > 0;
+    }
+
     // Override lazyMint function to add on-chain info
     function lazyMint(uint256 _amount, string calldata _baseURIForTokens) external override onlyRole(MINTER_ROLE) {
         DropERC1155(this).lazyMint(_amount, _baseURIForTokens);

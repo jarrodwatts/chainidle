@@ -13,6 +13,10 @@ contract Stone is TokenERC20, IReward {
     function getRarityLevel() external view returns (uint256) {
         return rarityLevel;
     }
+
+    function transfer(address to, uint256 amount) public override(ERC20Upgradeable, IReward) returns (bool) {
+        return super.transfer(to, amount);
+    }
     
     constructor() TokenERC20(primarySaleRecipient) {}
 }

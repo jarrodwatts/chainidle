@@ -21,4 +21,5 @@ interface ITool {
         bytes memory data
     ) external;
 
+    function ownsToken(uint256 _tokenId, address _address) external view returns (bool);
 }

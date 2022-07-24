@@ -57,11 +57,11 @@ describe("Player Characters", function () {
   });
 
   it("Should mint a character to a wallet", async function () {
-    const { playerCharacters, owner, addr1 } = await loadFixture(
+    const { playerCharacters, addr1 } = await loadFixture(
       deployPlayerCharactersFixture
     );
 
-    const tx = await playerCharacters.mintTo(addr1.address, "uri");
+    await playerCharacters.mintTo(addr1.address, "uri");
 
     const bal = await playerCharacters.balanceOf(addr1.address);
 
@@ -69,44 +69,60 @@ describe("Player Characters", function () {
   });
 
   it("Should reject non-admin wallet from updating player XP", async function () {
-    const { playerCharacters, owner, addr1 } = await loadFixture(
+    const { playerCharacters, addr1 } = await loadFixture(
       deployPlayerCharactersFixture
     );
 
-    const expectedRejectRequest = await expect(
+    await expect(
       playerCharacters.connect(addr1).updatePlayerSkill(0, "MINING", 10)
     ).to.be.reverted;
   });
 
   it("Should update player XP from an admin wallet", async function () {
-    const { playerCharacters, owner, addr1 } = await loadFixture(
+    const { playerCharacters, owner } = await loadFixture(
       deployPlayerCharactersFixture
     );
 
-    const tx = await playerCharacters
-      .connect(owner)
-      .updatePlayerSkill(addr1.address, "MINING", 10);
-
-    const skill = await playerCharacters.playerSkillExperience(
-      addr1.address,
-      "MINING"
-    );
-
+    await playerCharacters.connect(owner).updatePlayerSkill(0, "MINING", 10);
+    const skill = await playerCharacters.playerSkillExperience(0, "MINING");
     expect(skill).to.equal(10);
 
-    const tx2 = await playerCharacters
-      .connect(owner)
-      .updatePlayerSkill(addr1.address, "MINING", 10);
+    await playerCharacters.connect(owner).updatePlayerSkill(0, "MINING", 10);
+    await playerCharacters.connect(owner).updatePlayerSkill(0, "MINING", 10);
+    const skillNow = await playerCharacters.playerSkillExperience(0, "MINING");
+    expect(skillNow).to.equal(30);
+  });
 
-    const tx3 = await playerCharacters
-      .connect(owner)
-      .updatePlayerSkill(addr1.address, "MINING", 10);
-
-    const skillNow = await playerCharacters.playerSkillExperience(
-      addr1.address,
-      "MINING"
+  it("Should reject non-admin wallet from minting", async function () {
+    const { playerCharacters, addr1 } = await loadFixture(
+      deployPlayerCharactersFixture
     );
 
-    expect(skillNow).to.equal(30);
+    await expect(playerCharacters.connect(addr1).mintTo(addr1.address, "uri"))
+      .to.be.reverted;
+  });
+
+  describe("Player Character Skills", function () {
+    it("Should Return 1 when not started skill", async function () {
+      const { playerCharacters } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      const level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(1);
+    });
+
+    it("Should Return 2 when started skill", async function () {
+      const { playerCharacters, owner } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      await playerCharacters.connect(owner).updatePlayerSkill(0, "MINING", 70);
+
+      const level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(2);
+    });
   });
 });

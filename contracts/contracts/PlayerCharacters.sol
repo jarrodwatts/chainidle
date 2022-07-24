@@ -34,5 +34,34 @@ contract PlayerCharacters is ERC721SignatureMint, Permissions {
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         playerSkillExperience[_tokenId][_skill] = playerSkillExperience[_tokenId][_skill] +  _value;
     }
+
+    // playerSkillExperience is the raw XP data.
+    // There is a formula to convert raw XP to level
+    // - To be level 1, you need 69 XP points.
+    // - To be level 2, you need 69 + (69 * 0.069) = 73.761
+    // - To be level 3, you need 73.761 + (73.761 * 0.069) = 78.850509
+    // - To be level 4, you need 78.850509 + (78.850509 * 0.069) = 84.29119412
+    // This repeats until you reach level 99, where you need 47716.01882 XP points.
+    // Anything above that number is considered level 99 and cannot be claimed anymore.
+
+    // This has got to be the worst way possibkle to write it but math is too hard for me to reverse this into a formula
+    function getSkillLevel(uint256 _tokenId, string calldata _skill) public view returns (uint256) {
+        uint256 experienceOfPlayerSkill = playerSkillExperience[_tokenId][_skill];
+        uint256 nice = 69;
+        uint256 lol = 1000;
+        uint256 level = 1;
+
+        if (experienceOfPlayerSkill < 69) {
+            return level;
+        } else {
+            uint256 experienceRequired = 69;
+
+            while (experienceOfPlayerSkill >= experienceRequired) {
+                experienceRequired = experienceRequired +  (experienceRequired * (nice * lol));
+                level = level + 1;
+            }
+            return level;
+        }
+    }
 }
 

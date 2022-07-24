@@ -27,6 +27,17 @@ interface IStake {
     struct StakedTool {
         ITool toolContract;
         uint256 toolTokenId;
+        bool isStaked;
+    }
+
+    struct Staker {
+        address stakerAddress;
+        bool isStaked;
+    }
+    
+    struct StakedCharacter {
+        uint256 characterTokenId;
+        bool isStaked;
     }
 
     struct Reward {
@@ -46,13 +57,10 @@ interface IStake {
 
     function unstake(
         uint256 _playerTokenId,
-        address _toolContractAddress,
         uint256 _toolTokenId
     ) external;
 
-    function claimRewardsAndExperiencePoints(
-        address _playerAddress
-    ) external;
+    function claimRewardsAndExperiencePoints() external;
 
     ////////////////////////////////////////////////////////////////////
     // Update //
@@ -65,16 +73,13 @@ interface IStake {
     // View //
     ////////////////////////////////////////////////////////////////////
 
-    // The name of the skill that is improved by this staking contract.
-    function skillName() external view returns (bytes32);
-
     // The tokens that are owed to the player.
-    function calculateRewards(
+    function calculateOwedRewards(
         address _playerAddress
     ) external view returns (Reward[] memory);
 
     // The experience points that are owed to the player.
-    function calculateExperiencePoints(
+    function calculateOwedExperiencePoints(
         address _playerAddress
     ) external view returns (uint256);
 }

@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 */
 
 contract Mining is IStake, ReentrancyGuard {
-    bytes32 public constant SKILL_NAME = bytes32("Mining");
+    string public constant SKILL_NAME = "MINING";
 
     // Character NFTs
     PlayerCharacters public characterContract;
@@ -25,8 +25,10 @@ contract Mining is IStake, ReentrancyGuard {
     IReward[] public rewardsContracts;
 
     // Mapping of player addresses to their staked tokens
-    mapping(address => uint256) public stakedCharacters;
+    mapping(address => StakedCharacter) public stakedCharacters;
     mapping(address => StakedTool) public stakedTools;
+    mapping (address => uint256) public playerLastUpdate;
+
 
     constructor(
         PlayerCharacters _characterContract,
@@ -49,23 +51,25 @@ contract Mining is IStake, ReentrancyGuard {
         ITool _toolContractAddress,
         uint256 _toolTokenId
     ) external nonReentrant {
-        // Must have > 0 characters to stake
+        // Must own the character they're trying to stake
         require(
-            characterContract.balanceOf(msg.sender) > 0,
-            "You do not have the character token to stake"
+            characterContract.ownerOf(_playerTokenId) == msg.sender,
+            "You must own the character to stake it"
         );
 
-        // Must have > 0 tools to stake
+        // Must own the tool they're trying to stake
         require(
-            _toolContractAddress.balanceOf(msg.sender, _toolTokenId) > 0,
-            "You do not have the tool token to stake"
+            _toolContractAddress.ownsToken(_toolTokenId, msg.sender),
+            "You must own the tool to stake it"
         );
+
+        // TODO: Check if they already have a player/tool staked and send it back.
 
         // Transfer character token to staking contract
         characterContract.safeTransferFrom(
             msg.sender,         // from 
             address(this),      // to 
-            _playerTokenId     // id
+            _playerTokenId      // id
         );
 
         // Transfer tool token to staking contract
@@ -78,50 +82,127 @@ contract Mining is IStake, ReentrancyGuard {
         );
 
         // Update mappings
-        stakedCharacters[msg.sender] = _playerTokenId;
-        stakedTools[msg.sender] = StakedTool(_toolContractAddress, _toolTokenId);
+        stakedCharacters[msg.sender] = StakedCharacter(
+            _playerTokenId,
+            true
+        );
+
+        stakedTools[msg.sender] = StakedTool(_toolContractAddress, _toolTokenId, true);
     }
 
     function unstake(
         uint256 _playerTokenId,
-        address _toolContractAddress,
         uint256 _toolTokenId
     ) external nonReentrant {
-        // TODO: Implement
+        // Must have > 0 characters staked to unstake
+        require(
+            stakedCharacters[msg.sender].isStaked == true,
+            "You do not have any characters staked to unstake"
+        );
 
+        // Must have > 0 tools staked to unstake
+        require(
+            stakedTools[msg.sender].isStaked == true,
+            "You do not have any tools staked to unstake"
+        );
+
+        // Transfer tool token to player
+        stakedTools[msg.sender].toolContract.safeTransferFrom(
+            address(this),      // from 
+            msg.sender,         // to 
+            _toolTokenId,       // id
+            1,                  // amount
+            "Unstaking tool"    // data
+        );
+
+        // Transfer character token to player
+        characterContract.safeTransferFrom(
+            address(this),      // from 
+            msg.sender,         // to 
+            _playerTokenId      // id
+        );
+
+        // Update mappings
+        stakedCharacters[msg.sender] = StakedCharacter(
+            _playerTokenId,
+            false
+        );
+
+        stakedTools[msg.sender] = StakedTool(
+            stakedTools[msg.sender].toolContract,
+            _toolTokenId,
+            false
+        );
     }
 
-    function claimRewardsAndExperiencePoints(
-        address _playerAddress
-    ) external nonReentrant {
-        // TODO: Implement
+    function claimRewardsAndExperiencePoints() external nonReentrant {
+        Reward[] memory owedRewards = calculateOwedRewards(msg.sender);
+        uint256 owedExperiencePoints = calculateOwedExperiencePoints(msg.sender);
 
+        // For each reward, transfer the amount to the player
+        for (uint256 i = 0; i < owedRewards.length; i++) {
+            owedRewards[i].rewardContract.transfer(
+                msg.sender,
+                owedRewards[i].amount
+            );
+        }
+
+        // Update the character NFT's experience points (TODO: It won't have permission to do this)
+        characterContract.updatePlayerSkill(
+            stakedCharacters[msg.sender].characterTokenId,
+            SKILL_NAME,
+            owedExperiencePoints
+        );
+
+        // Update the player's last update
+        playerLastUpdate[msg.sender] = block.timestamp;
     }
-
-    
+  
     ////////////////////////////////////////////////////////////////////
     // View //
     ////////////////////////////////////////////////////////////////////
 
-
-    // The name of the skill that is improved by this staking contract.
-    function skillName() public pure returns (bytes32) {
-        return SKILL_NAME;
-    }
-
     // The tokens that are owed to the player.
-    function calculateRewards(
+    // Rewards are based on the experience level of the character nft's skill
+    // and the stats of the tool nft.
+    function calculateOwedRewards(
         address _playerAddress
-    ) external view returns (Reward[] memory) {
-        // TODO: Implement
+    ) public view returns (Reward[] memory) {
+        // The power level determines the rarity level of the rewards that can be given.
+        // from the rewardsContracts array (they are in order of rarity)
+        ITool.ToolStat memory toolPowerStats = stakedTools[_playerAddress].toolContract.getToolStats(
+            stakedTools[_playerAddress].toolTokenId
+        );
 
+        uint256 characterSkillLevel = characterContract.getSkillLevel(
+            stakedCharacters[_playerAddress].characterTokenId,
+            SKILL_NAME
+        );
+
+        Reward[] memory rewards = new Reward[](rewardsContracts.length);
+
+        uint256 rewardIndex = 0;
+        // Iterate over power level to 1 
+        for (uint256 i = toolPowerStats.powerLevel; i > 0; i--) {
+            // You get i * character skill level * tool usage rate of the rewardIndex'th reward
+            uint256 rewardAmountPerBlock = i * characterSkillLevel * toolPowerStats.usageRate;
+            Reward memory reward = Reward(
+                rewardsContracts[rewardIndex],
+                rewardAmountPerBlock * (block.number - playerLastUpdate[_playerAddress])
+            );
+            rewards[rewardIndex] = reward;
+            rewardIndex++;
+        }
+
+        return rewards;
     }
 
     // The experience points that are owed to the player.
-    function calculateExperiencePoints(
+    function calculateOwedExperiencePoints(
         address _playerAddress
-    ) external view returns (uint256) {
-        // TODO: Implement
-
+    ) public view returns (uint256) {
+        // TODO: Probably figure this out a bit more,
+        // For now, we just give 1 experience point per block.
+        return 1 * (block.number - playerLastUpdate[_playerAddress]);
     }
 }

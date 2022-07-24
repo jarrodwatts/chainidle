@@ -49,6 +49,10 @@ contract UpgradedPickaxes is Multiwrap, ITool {
         return ERC721Upgradeable.balanceOf(_owner);
     }
 
+    function ownsToken(uint256 _tokenId, address _address) public view override returns (bool) {
+        return ERC721Upgradeable.ownerOf(_tokenId) == _address;
+    }
+
     function safeTransferFrom(
         address from, 
         address to, 
