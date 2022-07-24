@@ -23,7 +23,9 @@ contract PlayerCharacters is ERC721SignatureMint, Permissions {
         address _royaltyRecipient,
         uint128 _royaltyBps,
         address _primarySaleRecipient
-    ) ERC721SignatureMint(_name, _symbol, _royaltyRecipient, _royaltyBps, _primarySaleRecipient) {}
+    ) ERC721SignatureMint(_name, _symbol, _royaltyRecipient, _royaltyBps, _primarySaleRecipient) {
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
 
     function updatePlayerSkill(
         uint256 _tokenId, 

@@ -27,13 +27,9 @@ describe("Token contract", function () {
     // To deploy our contract, we just have to call Token.deploy() and await
     // its deployed() method, which happens onces its transaction has been
     // mined.
-    const playerCharacters = await PlayerCharactersFactory.deploy(
-      "name",
-      "symbol",
-      owner.address,
-      500,
-      owner.address
-    );
+    const playerCharacters = await PlayerCharactersFactory.connect(
+      owner
+    ).deploy("name", "symbol", owner.address, 500, owner.address);
 
     await playerCharacters.deployed();
 
@@ -42,12 +38,12 @@ describe("Token contract", function () {
   }
 
   // You can nest describe calls to create subsections.
-  describe("Deployment", function () {
+  describe("Player Characters", function () {
     // `it` is another Mocha function. This is the one you use to define each
     // of your tests. It receives the test name, and a callback function.
     //
     // If the callback function is async, Mocha will `await` it.
-    it("Should set the right owner", async function () {
+    it("Should deploy the contract", async function () {
       // We use loadFixture to setup our environment, and then assert that
       // things went well
       const { playerCharacters, owner } = await loadFixture(
@@ -60,6 +56,46 @@ describe("Token contract", function () {
       // This test expects the owner variable stored in the contract to be
       // equal to our Signer's owner.
       expect(await playerCharacters.owner()).to.equal(owner.address);
+    });
+
+    it("Should mint a character to a wallet", async function () {
+      const { playerCharacters, owner, addr1 } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      const tx = await playerCharacters.mintTo(addr1.address, "uri");
+
+      const bal = await playerCharacters.balanceOf(addr1.address);
+
+      expect(bal).to.equal(1);
+    });
+
+    it("Should reject non-admin wallet from updating player XP", async function () {
+      const { playerCharacters, owner, addr1 } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      const expectedRejectRequest = await expect(
+        playerCharacters.connect(addr1).updatePlayerSkill(0, "MINING", 10)
+      ).to.be.reverted;
+    });
+
+    it("Should update player XP from an admin wallet", async function () {
+      const { playerCharacters, owner, addr1 } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      const tx = await playerCharacters
+        .connect(owner)
+        .updatePlayerSkill(addr1.address, "MINING", 10);
+
+      // Read player skill
+      const skill = await playerCharacters.playerSkillExperience(
+        addr1.address,
+        "MINING"
+      );
+
+      expect(skill).to.equal(10);
     });
   });
 });
