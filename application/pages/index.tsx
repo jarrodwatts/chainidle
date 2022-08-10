@@ -100,7 +100,7 @@ const Home: NextPage = () => {
           justifyContent="center"
           item
           xs={12}
-          sx={{ mt: 4, width: "100%" }}
+          sx={{ mt: 12, width: "100%" }}
         >
           <Grid container direction="row" style={{ width: "100%" }} spacing={3}>
             <Grid item xs={12} sm={7}>

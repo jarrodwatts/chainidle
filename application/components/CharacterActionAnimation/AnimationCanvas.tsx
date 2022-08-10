@@ -165,7 +165,6 @@ export default function AnimationCanvas({ character, action }: Props) {
         width: 256,
         height: 256,
         borderRadius: 8,
-        border: "1px solid red",
       }}
     />
   );

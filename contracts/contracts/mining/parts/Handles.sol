@@ -7,7 +7,7 @@ import "@thirdweb-dev/contracts/drop/DropERC1155.sol";
 /*
     ERC-1155 Collection of Pickaxe NFTs for mining
 */
-contract Pickaxes is DropERC1155, IPart {
+contract Handles is DropERC1155, IPart {
     mapping (uint256 => PartStat) public partStats;
 
     function updatePartStats(

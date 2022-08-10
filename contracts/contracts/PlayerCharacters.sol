@@ -2,7 +2,7 @@
 pragma solidity ^0.8.11;
 
 import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
-import "@thirdweb-dev/contracts/extension/Permissions.sol";
+import "@thirdweb-dev/contracts/extension/PermissionsEnumerable.sol";
 
 /**
     This is the player NFT Drop contract.
@@ -13,7 +13,11 @@ import "@thirdweb-dev/contracts/extension/Permissions.sol";
     These metadata mappings must ONLY be updatable by the permitted roles configured.
 */
 
-contract PlayerCharacters is ERC721SignatureMint, Permissions {
+contract PlayerCharacters is ERC721SignatureMint, PermissionsEnumerable {
+    // Any `bytes32` value is a valid role. You can create roles by defining them like this.
+    // This below role is granted to staker smart contracts so they can upgrade the player's nfts.
+    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+
     // Mapping of token ID -> mapping of skill -> experience.
     mapping (uint256 => mapping(string => uint256)) public playerSkillExperience;
 
@@ -25,13 +29,14 @@ contract PlayerCharacters is ERC721SignatureMint, Permissions {
         address _primarySaleRecipient
     ) ERC721SignatureMint(_name, _symbol, _royaltyRecipient, _royaltyBps, _primarySaleRecipient) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(UPGRADER_ROLE, msg.sender);
     }
 
     function updatePlayerSkill(
         uint256 _tokenId, 
         string calldata _skill, 
         uint256 _value
-    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) public onlyRole(UPGRADER_ROLE) {
         playerSkillExperience[_tokenId][_skill] = playerSkillExperience[_tokenId][_skill] +  _value;
     }
 
@@ -51,17 +56,20 @@ contract PlayerCharacters is ERC721SignatureMint, Permissions {
         uint256 lol = 1000;
         uint256 level = 1;
 
-        if (experienceOfPlayerSkill < 69) {
-            return level;
-        } else {
-            uint256 experienceRequired = 69;
+        uint256 experienceRequired = nice * lol; // (69) -> 69,000
 
-            while (experienceOfPlayerSkill >= experienceRequired) {
-                experienceRequired = experienceRequired +  (experienceRequired * (nice * lol));
-                level = level + 1;
-            }
-            return level;
+        // Since the multiplier is 0.069 and we are in Solidity, 
+        // we need to multiply the 0.069 number by 1000 to get the correct result
+        while (experienceOfPlayerSkill * lol >= experienceRequired
+            &&
+            level < 99
+        ) {
+            level++;
+            // this is almost definitely wrong but yolo
+            experienceRequired = experienceRequired + ((experienceRequired / 1000) * nice);
         }
+        
+        return level;
     }
 }
 

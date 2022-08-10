@@ -124,5 +124,52 @@ describe("Player Characters", function () {
 
       expect(level).to.equal(2);
     });
+
+    it("Should Return 5 when skill is at that level", async function () {
+      const { playerCharacters, owner } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      await playerCharacters.connect(owner).updatePlayerSkill(0, "MINING", 85);
+
+      const level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(5);
+    });
+
+    it("Should Return 54 then 55 when skill is at that level", async function () {
+      const { playerCharacters, owner } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      await playerCharacters
+        .connect(owner)
+        .updatePlayerSkill(0, "MINING", 2533);
+      let level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(56);
+
+      await playerCharacters
+        .connect(owner)
+        .updatePlayerSkill(0, "MINING", 1000);
+
+      level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(61);
+    });
+
+    it("Should Return 99 when skill maxed", async function () {
+      const { playerCharacters, owner } = await loadFixture(
+        deployPlayerCharactersFixture
+      );
+
+      await playerCharacters
+        .connect(owner)
+        .updatePlayerSkill(0, "MINING", 100000);
+
+      const level = await playerCharacters.getSkillLevel(0, "MINING");
+
+      expect(level).to.equal(99);
+    });
   });
 });
