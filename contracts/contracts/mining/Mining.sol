@@ -7,14 +7,14 @@ import "../interface/ITool.sol";
 import "../PlayerCharacters.sol";
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 /*
     This is the interface that all base tools purchasable from the shop must implement.
     - When you stake, it needs to know the contract address of the staked token per user.
 */
 
-contract Mining is IStake, ReentrancyGuard {
+contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
     string public constant SKILL_NAME = "MINING";
 
     // Character NFTs
@@ -204,5 +204,34 @@ contract Mining is IStake, ReentrancyGuard {
         // TODO: Probably figure this out a bit more,
         // For now, we just give 1 experience point per block.
         return 1 * (block.number - playerLastUpdate[_playerAddress]);
+    }
+
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
+
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) external returns (bytes4) {
+        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    }
+
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external returns (bytes4) {
+        return bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"));
     }
 }

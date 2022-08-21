@@ -2,12 +2,16 @@
 pragma solidity ^0.8.11;
 
 import "../../interface/ITool.sol";
-import "@thirdweb-dev/contracts/drop/DropERC1155.sol";
+import "@thirdweb-dev/contracts/base/ERC1155LazyMint.sol";
+import "@thirdweb-dev/contracts/extension/DropSinglePhase1155.sol";
+import "@thirdweb-dev/contracts/extension/PermissionsEnumerable.sol";
+import "@thirdweb-dev/contracts/extension/PrimarySale.sol";
+import "@thirdweb-dev/contracts/lib/CurrencyTransferLib.sol";
 
 /*
     ERC-1155 Collection of Pickaxe NFTs for mining
 */
-contract Pickaxes is DropERC1155, ITool {
+contract Pickaxes is ERC1155LazyMint, DropSinglePhase1155, PermissionsEnumerable, PrimarySale, ITool {
     bytes32 private constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     mapping (uint256 => ToolStat) public toolStats;
@@ -24,11 +28,13 @@ contract Pickaxes is DropERC1155, ITool {
         return toolStats[_tokenId];
     }
 
-    function balanceOf(
-        address _owner, 
-        uint256 _tokenId
-    ) public view override(ERC1155Upgradeable, ITool) returns (uint256) {
-        return ERC1155Upgradeable.balanceOf(_owner, _tokenId);
+    function ownsToken(uint256 _tokenId, address _address) public view override(ITool) returns (bool) {
+        uint256 bal = balanceOf[_address][_tokenId];
+        return bal > 0;
+    }
+
+    function toolBalance(address _owner, uint256 _tokenId) public view override(ITool) returns (uint256) {
+        return balanceOf[_owner][_tokenId];
     }
 
     function safeTransferFrom(
@@ -37,21 +43,79 @@ contract Pickaxes is DropERC1155, ITool {
         uint256 tokenId, 
         uint256 amount,
         bytes memory data
-    ) public override(ERC1155Upgradeable, ITool) {
-        return ERC1155Upgradeable.safeTransferFrom(from, to, tokenId, amount, data);
-
+    ) public override(ERC1155, ITool) {
+        ERC1155.safeTransferFrom(from, to, tokenId, amount, data);
     }
 
-    function ownsToken(uint256 _tokenId, address _address) public view override(ITool) returns (bool) {
-        uint256 bal = ERC1155Upgradeable.balanceOf(_address, _tokenId);
-        return bal > 0;
+    function lazyMint(
+        uint256 _amount,
+        string calldata _baseURIForTokens,
+        bytes calldata _data
+    ) public virtual override returns (uint256 batchId) {
+        super.lazyMint(_amount, _baseURIForTokens, _data);
+
+        // Use the nextTokenIdToMint() as the power level
+        uint256 powerLevel = nextTokenIdToMint();
+        // Usage rate = 1 by default
+        uint256 usageRate = 1;
+        // Update the tool stats
+        updateToolStats(nextTokenIdToMint() - 1,  powerLevel, usageRate);
+
+        return batchId;
     }
 
-    // Override lazyMint function to add on-chain info
-    function lazyMint(uint256 _amount, string calldata _baseURIForTokens) external override onlyRole(MINTER_ROLE) {
-        DropERC1155(this).lazyMint(_amount, _baseURIForTokens);
-
-        // Then, update the power level and usage rate of the newly lazy minted token
-        updateToolStats(nextTokenIdToMint - 1, nextTokenIdToMint, 1);
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps,
+        address _primarySaleRecipient
+    ) ERC1155LazyMint(_name, _symbol, _royaltyRecipient, _royaltyBps) {
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupPrimarySaleRecipient(_primarySaleRecipient);
     }
+
+    function collectPriceOnClaim(
+        address _primarySaleRecipient,
+        uint256 _quantityToClaim,
+        address _currency,
+        uint256 _pricePerToken
+    ) internal virtual override(DropSinglePhase1155) {
+        if (_pricePerToken == 0) {
+            return;
+        }
+
+        uint256 totalPrice = _quantityToClaim * _pricePerToken;
+
+        if (_currency == CurrencyTransferLib.NATIVE_TOKEN) {
+            if (msg.value != totalPrice) {
+                revert("Must send total price.");
+            }
+        }
+
+        address saleRecipient = _primarySaleRecipient == address(0) ? primarySaleRecipient() : _primarySaleRecipient;
+        CurrencyTransferLib.transferCurrency(_currency, msg.sender, saleRecipient, totalPrice);
+    }
+
+    function transferTokensOnClaim(
+        address _to,
+        uint256 _tokenId,
+        uint256 _quantityBeingClaimed
+    ) internal virtual override {
+        _mint(_to, _tokenId, _quantityBeingClaimed, "");
+    }
+
+    function _canSetClaimConditions() internal view virtual override returns (bool) {
+        return msg.sender == owner();
+    }
+
+    function _canSetPrimarySaleRecipient()
+        internal
+        virtual
+        override
+        returns (bool)
+    {
+        return hasRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
 }

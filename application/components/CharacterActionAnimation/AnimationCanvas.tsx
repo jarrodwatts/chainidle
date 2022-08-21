@@ -12,8 +12,6 @@ type Props = {
 
 // Takes in a character and an action and renders the animation
 export default function AnimationCanvas({ character, action }: Props) {
-  console.log({ character, action });
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [layerImages, setLayerImages] = useState<{
@@ -43,11 +41,8 @@ export default function AnimationCanvas({ character, action }: Props) {
     const file =
       characterProperties[layer].files[character[layer]?.type as number];
 
-    console.log(layer);
-    console.log(file);
     const fileWithoutType = file.split(".")[0];
     const fileWithAction = `${fileWithoutType}_${action}`;
-    console.log(`${filePath}${fileWithAction}.${file.split(".")[1]}`);
     return `${filePath}${fileWithAction}.${file.split(".")[1]}`;
   }
 
@@ -110,16 +105,6 @@ export default function AnimationCanvas({ character, action }: Props) {
             keyof typeof characterProperties
           >
         ).forEach((key) => {
-          console.log(
-            key,
-            ":",
-
-            animationFrame * actions[action].frameSize.x,
-            (character[key]?.color as number) *
-              actions[action].frameSize.x *
-              animationFrame
-          );
-
           if (layerImages[key]) {
             //  Draw 32 x 32 size image
             ctx.drawImage(
@@ -152,7 +137,6 @@ export default function AnimationCanvas({ character, action }: Props) {
         // Otherwise, increment the frame
         setAnimationFrame(animationFrame + 1);
       }
-      console.log("hi");
     }, 150);
 
     return () => clearInterval(interval);

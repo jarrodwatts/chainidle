@@ -42,7 +42,7 @@ contract UpgradedPickaxes is Multiwrap, ITool {
     // Overrides //
     ////////////////////////////////////////////////////////////////////
 
-    function balanceOf(
+    function toolBalance(
         address _owner, 
         uint256 _tokenId
     ) public view override returns (uint256) {

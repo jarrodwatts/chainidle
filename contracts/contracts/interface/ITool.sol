@@ -11,7 +11,7 @@ interface ITool {
 
     function updateToolStats(uint256 _tokenId, uint256 _powerLevel, uint256 _usageRate) external;
 
-    function balanceOf(address _owner, uint256 _tokenId) external view returns (uint256);
+    function toolBalance(address _owner, uint256 _tokenId) external view returns (uint256);
 
     function safeTransferFrom(
         address from, 

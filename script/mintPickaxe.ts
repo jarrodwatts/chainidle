@@ -11,8 +11,4 @@ import fs from "fs";
   const pickaxes = await tw.getContract(
     "0xFB76Cb220793F570fFFb671813A05fCae0A7AE9A"
   );
-
-  console.log(pickaxes.edition?.mint);
-
-  
 })();

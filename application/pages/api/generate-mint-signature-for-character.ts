@@ -15,8 +15,6 @@ export default async function generateMintSignature(
   }: { address: string; character: Character; characterImage: string } =
     JSON.parse(req.body);
 
-  console.log({ address, character, characterImage });
-
   // Generate mint signature ...
 
   const PK = process.env.PRIVATE_KEY as string;
@@ -25,7 +23,7 @@ export default async function generateMintSignature(
 
   const contract = await thirdweb.getContract(PLAYER_CHARACTERS_ADDRESS);
 
-  const signature = await contract.nft.signature.generate({
+  const signature = await contract?.nft?.signature?.generate({
     metadata: {
       image: characterImage,
       name: "ChainIdle Character",

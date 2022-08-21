@@ -24,11 +24,7 @@ export default function CharacterCreationContainer() {
     },
   });
 
-  console.log(character);
-
   async function mintCharacter() {
-    console.log("minting character");
-
     if (!canvasRef || !canvasRef.current) {
       return;
     }
@@ -48,9 +44,7 @@ export default function CharacterCreationContainer() {
 
     const signedPayload = await response.json();
 
-    console.log(signedPayload);
-
-    const nft = await contract?.nft.signature.mint(signedPayload);
+    const nft = await contract?.nft?.signature?.mint(signedPayload);
   }
 
   return (
