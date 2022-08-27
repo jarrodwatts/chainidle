@@ -32,9 +32,11 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
 
     constructor(
         PlayerCharacters _characterContract,
+        ITool[] memory _toolsContracts,
         IReward[] memory _rewardsContracts
     ) {
         characterContract = _characterContract;
+        toolsContracts = _toolsContracts;
         rewardsContracts = _rewardsContracts;
     }
 

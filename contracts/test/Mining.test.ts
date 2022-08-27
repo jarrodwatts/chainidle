@@ -47,25 +47,18 @@ describe("Mining", function () {
     await basePickaxes.deployed();
 
     // Deploy Stone (Token 1)
-    const stone = await StoneFactory.connect(owner).deploy(
-      "name",
-      "symbol",
-      "URI"
-    );
+    const stone = await StoneFactory.connect(owner).deploy("name", "symbol");
     await stone.deployed();
 
     // Deploy Iron (Token 2)
-    const iron = await IronFactory.connect(owner).deploy(
-      "name",
-      "symbol",
-      "URI"
-    );
+    const iron = await IronFactory.connect(owner).deploy("name", "symbol");
     await iron.deployed();
 
     // Deploy Mining (Stake)
     const mining = await MiningFactory.connect(owner).deploy(
       playerCharacters.address,
-      [stone.address, iron.address]
+      [basePickaxes.address],
+      [(stone.address, iron.address)]
     );
     await mining.deployed();
 
@@ -139,5 +132,22 @@ describe("Mining", function () {
 
     // Stake a character and a pickaxe onto Mining
     await mining.connect(addr1).stake(0, basePickaxes.address, 0);
+
+    // Expect mappings to be updated
+    const stakedChar = await mining.connect(addr1).stakedTools(addr1.address);
+    const stakedTool = await mining.connect(addr1).stakedTools(addr1.address);
+    expect(stakedChar.isStaked).to.equal(true);
+    expect(stakedTool.isStaked).to.equal(true);
+
+    // View owed rewards
+    const owedRewards = await mining
+      .connect(addr1)
+      .calculateOwedRewards(addr1.address);
+
+    const owedExp = await mining
+      .connect(addr1)
+      .calculateOwedExperiencePoints(addr1.address);
+
+    console.log(owedExp);
   });
 });

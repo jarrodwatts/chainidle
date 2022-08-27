@@ -17,9 +17,8 @@ contract Iron is ERC20Base, IReward {
 
     constructor(
         string memory _name,
-        string memory _symbol,
-        string memory _contractURI
-    ) ERC20Base(_name, _symbol, _contractURI) {
+        string memory _symbol
+    ) ERC20Base(_name, _symbol) {
     }
     
 }

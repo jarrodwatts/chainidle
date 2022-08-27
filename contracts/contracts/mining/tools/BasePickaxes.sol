@@ -111,8 +111,8 @@ contract Pickaxes is ERC1155LazyMint, DropSinglePhase1155, PermissionsEnumerable
 
     function _canSetPrimarySaleRecipient()
         internal
-        virtual
         override
+        view
         returns (bool)
     {
         return hasRole(DEFAULT_ADMIN_ROLE, msg.sender);
