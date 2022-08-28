@@ -65,7 +65,38 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
             "You must own the tool to stake it"
         );
 
-        // TODO: Check if they already have a player/tool staked and send it back.
+        // Check if they already have a player/tool staked and send it back.
+        if (stakedCharacters[msg.sender].isStaked == true) {
+            // Update mappings
+            stakedCharacters[msg.sender] = StakedCharacter(
+                stakedCharacters[msg.sender].characterTokenId,
+                false
+            );
+
+            // Transfer character token to player
+            characterContract.safeTransferFrom(
+                address(this),                                      // from 
+                msg.sender,                                         // to 
+                stakedCharacters[msg.sender].characterTokenId       // id
+            );
+        }
+
+        if (stakedTools[msg.sender].isStaked == true) {
+            // Transfer tool token to player
+            stakedTools[msg.sender].toolContract.safeTransferFrom(
+                address(this),      // from 
+                msg.sender,         // to 
+                stakedTools[msg.sender].toolTokenId,       // id
+                1,                  // amount
+                "Unstaking tool"    // data
+            );
+
+            stakedTools[msg.sender] = StakedTool(
+                stakedTools[msg.sender].toolContract,
+                _toolTokenId,
+                false
+            );
+        }
 
         // Transfer character token to staking contract
         characterContract.safeTransferFrom(
@@ -90,12 +121,32 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
         );
 
         stakedTools[msg.sender] = StakedTool(_toolContractAddress, _toolTokenId, true);
+
+        if (playerLastUpdate[msg.sender] != 0) {
+            Reward[] memory owedRewards = calculateOwedRewards(msg.sender);
+            uint256 owedExperiencePoints = calculateOwedExperiencePoints(msg.sender);
+
+            // For each reward, transfer the amount to the player
+            for (uint256 i = 0; i < owedRewards.length; i++) {
+                owedRewards[i].rewardContract.transfer(
+                    msg.sender,
+                    owedRewards[i].amount
+                );
+            }
+
+            // Update the character NFT's experience points (TODO: It won't have permission to do this)
+            characterContract.updatePlayerSkill(
+                stakedCharacters[msg.sender].characterTokenId,
+                SKILL_NAME,
+                owedExperiencePoints
+            );
+
+        }
+        // Update the player's last update
+        playerLastUpdate[msg.sender] = block.timestamp;
     }
 
-    function unstake(
-        uint256 _playerTokenId,
-        uint256 _toolTokenId
-    ) external nonReentrant {
+    function unstake() external nonReentrant {
         // Must have > 0 characters staked to unstake
         require(
             stakedCharacters[msg.sender].isStaked == true,
@@ -112,7 +163,7 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
         stakedTools[msg.sender].toolContract.safeTransferFrom(
             address(this),      // from 
             msg.sender,         // to 
-            _toolTokenId,       // id
+            stakedTools[msg.sender].toolTokenId,       // id
             1,                  // amount
             "Unstaking tool"    // data
         );
@@ -121,18 +172,18 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
         characterContract.safeTransferFrom(
             address(this),      // from 
             msg.sender,         // to 
-            _playerTokenId      // id
+            stakedCharacters[msg.sender].characterTokenId      // id
         );
 
         // Update mappings
         stakedCharacters[msg.sender] = StakedCharacter(
-            _playerTokenId,
+            stakedCharacters[msg.sender].characterTokenId,
             false
         );
 
         stakedTools[msg.sender] = StakedTool(
             stakedTools[msg.sender].toolContract,
-            _toolTokenId,
+            stakedTools[msg.sender].toolTokenId,
             false
         );
     }
@@ -181,16 +232,17 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
             SKILL_NAME
         );
 
-        Reward[] memory rewards = new Reward[](rewardsContracts.length);
+        Reward[] memory rewards = new Reward[](toolPowerStats.powerLevel);
 
         uint256 rewardIndex = 0;
         // Iterate over power level to 1 
         for (uint256 i = toolPowerStats.powerLevel; i > 0; i--) {
             // You get i * character skill level * tool usage rate of the rewardIndex'th reward
+            // TODO: This is always going to round down. We cannot have decimal rewards.
             uint256 rewardAmountPerBlock = i * characterSkillLevel * toolPowerStats.usageRate;
             Reward memory reward = Reward(
                 rewardsContracts[rewardIndex],
-                rewardAmountPerBlock * (block.number - playerLastUpdate[_playerAddress])
+                rewardAmountPerBlock * (block.timestamp - playerLastUpdate[_playerAddress])
             );
             rewards[rewardIndex] = reward;
             rewardIndex++;
@@ -205,7 +257,7 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
     ) public view returns (uint256) {
         // TODO: Probably figure this out a bit more,
         // For now, we just give 1 experience point per block.
-        return 1 * (block.number - playerLastUpdate[_playerAddress]);
+        return 1 * (block.timestamp - playerLastUpdate[_playerAddress]);
     }
 
     function onERC721Received(

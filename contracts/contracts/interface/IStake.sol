@@ -55,10 +55,7 @@ interface IStake {
         uint256 _toolTokenId
     ) external;
 
-    function unstake(
-        uint256 _playerTokenId,
-        uint256 _toolTokenId
-    ) external;
+    function unstake() external;
 
     function claimRewardsAndExperiencePoints() external;
 

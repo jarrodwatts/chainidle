@@ -52,14 +52,11 @@ contract Pickaxes is ERC1155LazyMint, DropSinglePhase1155, PermissionsEnumerable
         string calldata _baseURIForTokens,
         bytes calldata _data
     ) public virtual override returns (uint256 batchId) {
+        uint256 tokenId = nextTokenIdToMint();
         super.lazyMint(_amount, _baseURIForTokens, _data);
-
-        // Use the nextTokenIdToMint() as the power level
         uint256 powerLevel = nextTokenIdToMint();
-        // Usage rate = 1 by default
         uint256 usageRate = 1;
-        // Update the tool stats
-        updateToolStats(nextTokenIdToMint() - 1,  powerLevel, usageRate);
+        updateToolStats(tokenId, powerLevel, usageRate);
 
         return batchId;
     }
