@@ -76,7 +76,9 @@ export default function CharacterPreview({
             //  Draw 32 x 32 size image
             ctx.drawImage(
               selectedItemImages[key],
-              characterProperties[key].frameSize.x * character[key]?.color * 8,
+              characterProperties[key].frameSize.x *
+                character?.[key]?.color *
+                8,
               0,
               characterProperties[key].frameSize.x,
               characterProperties[key].frameSize.y,

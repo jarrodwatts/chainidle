@@ -3,7 +3,7 @@ import { ChainId } from "@thirdweb-dev/sdk";
 // Environment detector
 const env = process.env.NODE_ENV;
 
-export const CHAIN_ID = env === "development" ? ChainId.Goerli : ChainId.Goerli;
+export const CHAIN_ID = env === "development" ? ChainId.Mumbai : ChainId.Mumbai;
 
 export const MINING_ADDRESS =
   env === "development"
@@ -12,8 +12,8 @@ export const MINING_ADDRESS =
 
 export const PLAYER_CHARACTERS_ADDRESS =
   env === "development"
-    ? "0x47aFa407D59E75aFA7Dc6EC5652e249Dc47f138F"
-    : "0x47aFa407D59E75aFA7Dc6EC5652e249Dc47f138F";
+    ? "0x9817efF0d4b7354623d58F0A265677Ee00377aC6"
+    : "0x9817efF0d4b7354623d58F0A265677Ee00377aC6";
 
 export const PICKAXES_ADDRESS =
   env === "development"

@@ -29,16 +29,12 @@ export default function CharacterCreationContainer() {
       return;
     }
 
-    // Base 64 encode the canvas
-    const characterImage = canvasRef.current.toDataURL();
-
     // Send the request to the server
     const response = await fetch("/api/generate-mint-signature-for-character", {
       method: "POST",
       body: JSON.stringify({
         address,
         character,
-        characterImage,
       }),
     });
 

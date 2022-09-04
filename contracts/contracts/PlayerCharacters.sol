@@ -36,9 +36,7 @@ contract PlayerCharacters is ERC721SignatureMint, PermissionsEnumerable {
         uint256 _tokenId, 
         string calldata _skill, 
         uint256 _value
-    ) public 
-    // temp remove
-    //onlyRole(UPGRADER_ROLE) 
+    ) public onlyRole(UPGRADER_ROLE) 
     {
         playerSkillExperience[_tokenId][_skill] = playerSkillExperience[_tokenId][_skill] +  _value;
     }
