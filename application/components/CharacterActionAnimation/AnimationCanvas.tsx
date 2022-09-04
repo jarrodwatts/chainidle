@@ -4,6 +4,7 @@ import characterProperties from "../../const/character";
 import Character from "../../types/Character";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
 import directions from "../../types/Directions";
+import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 
 type Props = {
   character: Character;
@@ -64,7 +65,7 @@ export default function AnimationCanvas({ character, action }: Props) {
 
         // character has multiple keys (e.g. "base", "hat", "hair", etc.)
         // so we need to iterate over all of them
-        (
+        reorderCharacterKeysForLayering(
           Object.keys(character) as Array<keyof typeof characterProperties>
         ).forEach((key) => {
           if (character[key] === undefined) {
@@ -100,7 +101,7 @@ export default function AnimationCanvas({ character, action }: Props) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Ensure we get the correct order by looping over keys of characterproperties object
-        (
+        reorderCharacterKeysForLayering(
           Object.keys(orderCharacterKeysforLayeredDisplay(character)) as Array<
             keyof typeof characterProperties
           >

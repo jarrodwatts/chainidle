@@ -8,6 +8,7 @@ import characterProperties from "../../const/character";
 import path from "path";
 import { IpfsStorage } from "@thirdweb-dev/storage";
 import { promises as fs } from "fs";
+import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 
 export default async function generateMintSignature(
   req: NextApiRequest,
@@ -32,7 +33,7 @@ export default async function generateMintSignature(
   const context = canvas.getContext("2d");
   context.clearRect(0, 0, canvas.width, canvas.height);
   // Loop through the keys and draw the image
-  (
+  reorderCharacterKeysForLayering(
     Object.keys(orderCharacterKeysforLayeredDisplay(character)) as Array<
       keyof typeof characterProperties
     >

@@ -8,6 +8,7 @@ import CharacterPreview from "./CharacterPreview";
 import CharacterPropertyOptionContainer from "./CharacterPropertyOptionContainer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
+import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 
 export default function CharacterCreationContainer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,7 +125,7 @@ export default function CharacterCreationContainer() {
             position: "relative",
           }}
         >
-          {(
+          {reorderCharacterKeysForLayering(
             Object.keys(characterProperties) as Array<
               keyof typeof characterProperties
             >

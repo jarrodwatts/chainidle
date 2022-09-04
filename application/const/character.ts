@@ -19,6 +19,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 0,
   },
   eyes: {
     name: "eyes",
@@ -46,6 +47,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 1,
   },
   blush: {
     name: "blush",
@@ -58,6 +60,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 2,
   },
   lipstick: {
     name: "lipstick",
@@ -70,6 +73,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 3,
   },
   upper: {
     name: "upper",
@@ -101,6 +105,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 4,
   },
   lower: {
     name: "lower",
@@ -124,6 +129,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 5,
   },
   bodysuit: {
     name: "bodysuit",
@@ -136,6 +142,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 6,
   },
   shoes: {
     name: "shoes",
@@ -159,6 +166,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 7,
   },
   hair: {
     name: "hair",
@@ -200,6 +208,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 8,
   },
   beard: {
     name: "beard",
@@ -227,6 +236,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 9,
   },
   glasses: {
     name: "glasses",
@@ -250,6 +260,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 10,
   },
   earring: {
     name: "earring",
@@ -267,6 +278,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 11,
   },
   hat: {
     name: "hat",
@@ -285,6 +297,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 12,
   },
   mask: {
     name: "mask",
@@ -297,6 +310,7 @@ const characterProperties = {
       xSpace: 0,
       ySpace: 0,
     },
+    layerIndex: 13,
   },
 };
 

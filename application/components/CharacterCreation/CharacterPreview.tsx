@@ -3,6 +3,7 @@ import characterProperties from "../../const/character";
 import Character from "../../types/Character";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 
 type Props = {
   character: Character;
@@ -67,7 +68,7 @@ export default function CharacterPreview({
 
       if (ctx) {
         // Ensure we get the correct order by looping over keys of characterproperties object
-        (
+        reorderCharacterKeysForLayering(
           Object.keys(orderCharacterKeysforLayeredDisplay(character)) as Array<
             keyof typeof characterProperties
           >
@@ -77,7 +78,7 @@ export default function CharacterPreview({
             ctx.drawImage(
               selectedItemImages[key],
               characterProperties[key].frameSize.x *
-                character?.[key]?.color *
+                character?.[key]?.color! *
                 8,
               0,
               characterProperties[key].frameSize.x,
