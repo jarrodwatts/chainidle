@@ -15,15 +15,8 @@ export default function GameSidebar() {
   return (
     <Box
       sx={{
+        height: 0,
         width: 200,
-        height: "100%",
-        overflow: "hidden",
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
       }}
     >
       <List>

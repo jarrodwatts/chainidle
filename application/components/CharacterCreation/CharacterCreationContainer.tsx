@@ -9,6 +9,7 @@ import CharacterPropertyOptionContainer from "./CharacterPropertyOptionContainer
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
+import { useLoadingState } from "../../context/LoadingContext";
 
 export default function CharacterCreationContainer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,6 +18,7 @@ export default function CharacterCreationContainer() {
   const connectWallet = useMetamask();
 
   const { contract } = useContract(PLAYER_CHARACTERS_ADDRESS);
+  const { setLoading } = useLoadingState();
 
   const [character, setCharacter] = useState<Character>({
     base: {
@@ -26,22 +28,39 @@ export default function CharacterCreationContainer() {
   });
 
   async function mintCharacter() {
-    if (!canvasRef || !canvasRef.current) {
-      return;
+    try {
+      if (!canvasRef || !canvasRef.current) {
+        return;
+      }
+
+      setLoading({
+        loading: true,
+        message: "minting ur character...",
+      });
+
+      // Send the request to the server
+      const response = await fetch(
+        "/api/generate-mint-signature-for-character",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            address,
+            character,
+          }),
+        }
+      );
+
+      const signedPayload = await response.json();
+
+      const nft = await contract?.nft?.signature?.mint(signedPayload);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading({
+        loading: false,
+        message: "",
+      });
     }
-
-    // Send the request to the server
-    const response = await fetch("/api/generate-mint-signature-for-character", {
-      method: "POST",
-      body: JSON.stringify({
-        address,
-        character,
-      }),
-    });
-
-    const signedPayload = await response.json();
-
-    const nft = await contract?.nft?.signature?.mint(signedPayload);
   }
 
   return (
@@ -93,7 +112,11 @@ export default function CharacterCreationContainer() {
           </Grid>
           <Grid item sx={{ mb: 1 }}>
             <Grid container justifyContent="center" item>
-              <CharacterPreview character={character} canvasRef={canvasRef} />
+              <CharacterPreview
+                character={character}
+                canvasRef={canvasRef}
+                style={{ marginTop: -24 }}
+              />
             </Grid>
             <Grid item>
               <Button

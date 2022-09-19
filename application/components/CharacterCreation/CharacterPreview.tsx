@@ -98,8 +98,8 @@ export default function CharacterPreview({
     <canvas
       ref={canvasRef}
       style={{
-        border: "1px solid grey",
         borderRadius: 16,
+        marginTop: mobileScreenQuery ? -72 : -128,
         width: mobileScreenQuery ? 128 : 196,
         height: mobileScreenQuery ? 128 : 196,
         display: "flex",

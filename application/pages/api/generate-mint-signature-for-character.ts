@@ -33,13 +33,17 @@ export default async function generateMintSignature(
   const context = canvas.getContext("2d");
   context.clearRect(0, 0, canvas.width, canvas.height);
   // Loop through the keys and draw the image
-  reorderCharacterKeysForLayering(
+
+  const toDraw = reorderCharacterKeysForLayering(
     Object.keys(orderCharacterKeysforLayeredDisplay(character)) as Array<
       keyof typeof characterProperties
     >
-  ).forEach(async (key) => {
+  );
+
+  for (const key of toDraw) {
+    console.log(key);
     if (character[key] === undefined) {
-      return;
+      continue;
     }
 
     const fullPath = path.join(
@@ -68,9 +72,7 @@ export default async function generateMintSignature(
       canvas.height
     );
     console.log("Drew image for key: ", key);
-  });
-
-  // Wait 5 seconds
+  }
 
   const storage = new IpfsStorage();
 

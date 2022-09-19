@@ -134,7 +134,7 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
                 );
             }
 
-            // Update the character NFT's experience points (TODO: It won't have permission to do this)
+            // Call updatePlayerSkill from this contract
             characterContract.updatePlayerSkill(
                 stakedCharacters[msg.sender].characterTokenId,
                 SKILL_NAME,

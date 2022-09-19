@@ -67,7 +67,7 @@ export default function CharacterPropertyOption({
           borderColor:
             character?.[property.name]?.type === index
               ? theme.palette.primary.main
-              : "rgba(0,0,0,0.5)",
+              : "rgba(255,255,255,0.3)",
           borderRadius: 16,
           cursor: "pointer",
         }}

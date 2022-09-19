@@ -1,95 +1,91 @@
-import { Button, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import {
-  ConnectWallet,
   useContract,
-  useClaimNFT,
   useAddress,
-  useContractData,
+  useOwnedNFTs,
+  ConnectWallet,
 } from "@thirdweb-dev/react";
-import React from "react";
-import {
-  IRON_ADDRESS,
-  MINING_ADDRESS,
-  PICKAXES_ADDRESS,
-  PLAYER_CHARACTERS_ADDRESS,
-  STONE_ADDRESS,
-} from "../const/contractAddresses";
+import React, { useEffect } from "react";
+import CharacterCreationContainer from "../components/CharacterCreation/CharacterCreationContainer";
+import GameArea from "../components/game/GameArea";
+import { PLAYER_CHARACTERS_ADDRESS } from "../const/contractAddresses";
+import { useLoadingState } from "../context/LoadingContext";
 
-type Props = {};
-
-export default function Play({}: Props) {
+export default function Play() {
+  const { loading, setLoading } = useLoadingState();
   const address = useAddress();
-  // Player Characters
-  const { contract: playerCharacters } = useContract(PLAYER_CHARACTERS_ADDRESS);
 
-  // Pickaxes
-  const { contract: pickaxes } = useContract(PICKAXES_ADDRESS);
+  const { contract: playerCharactersContract } = useContract(
+    PLAYER_CHARACTERS_ADDRESS
+  );
+  const { data: ownedNfts, isLoading: loadingNftBalance } = useOwnedNFTs(
+    playerCharactersContract,
+    address
+  );
 
-  // Tokens (Iron, Stone)
-  const { contract: iron } = useContract(IRON_ADDRESS);
-  const { contract: stone } = useContract(STONE_ADDRESS);
+  useEffect(() => {
+    if (loadingNftBalance) {
+      setLoading({
+        loading: true,
+        message: "checking ur wallet...",
+      });
+    } else {
+      setLoading({
+        loading: false,
+        message: "",
+      });
+    }
+  }, [loadingNftBalance, setLoading]);
 
-  // Mining
-  const { contract: mining } = useContract(MINING_ADDRESS);
-
-  // == functions ==
-  async function claimPickaxe() {
-    console.log(pickaxes);
-    const tx = await pickaxes?.edition.drop?.claim?.to(address, 0, 1);
+  if (loading.loading || loadingNftBalance) {
+    return <div></div>;
   }
 
-  async function stake() {
-    // set approval
-    const approve1tx = await pickaxes?.call(
-      "setApprovalForAll",
-      MINING_ADDRESS,
-      true
-    );
-    const approve2tx = await playerCharacters?.call(
-      "setApprovalForAll",
-      MINING_ADDRESS,
-      true
-    );
-
-    const tx = await mining?.call("stake", 0, PICKAXES_ADDRESS, 0);
-  }
-
-  async function viewInfo() {
-    const tx = await mining?.call("calculateOwedRewards", address);
-    console.log(tx);
-  }
-
-  return (
-    <Grid
-      container
-      spacing={5}
-      style={{ height: "50vh" }}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Grid item>
-        <h1>test zone</h1>
-
+  if (ownedNfts === undefined) {
+    return (
+      <div>
         <ConnectWallet />
+      </div>
+    );
+  }
 
-        <hr />
+  if (ownedNfts.length === 0) {
+    return (
+      <Container maxWidth="lg">
+        <CharacterCreationContainer />
+      </Container>
+    );
+  }
 
-        <h2>Pickaxes</h2>
+  // User already has an NFT. Ready to play!
+  return (
+    <>
+      <Container
+        maxWidth="lg"
+        sx={{
+          mt: 9,
+        }}
+      >
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          style={{
+            width: "100%",
+            marginTop: 2,
+            textAlign: "center",
+            padding: 0,
+          }}
+        >
+          <Typography variant="h1">yo</Typography>
+          <Typography variant="body2" sx={{ mt: 3 }}>
+            let&apos;s play
+          </Typography>
 
-        <Button variant="contained" color="primary" onClick={claimPickaxe}>
-          Claim Pickaxe
-        </Button>
-
-        <h2>Mining</h2>
-
-        <Button variant="contained" color="primary" onClick={stake}>
-          Stake
-        </Button>
-
-        <Button variant="contained" color="primary" onClick={viewInfo}>
-          View Info
-        </Button>
-      </Grid>
-    </Grid>
+          <GameArea />
+        </Grid>
+      </Container>
+    </>
   );
 }

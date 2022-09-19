@@ -5,7 +5,7 @@ import "../../interface/IReward.sol";
 import "@thirdweb-dev/contracts/base/ERC20Base.sol";
 
 contract Stone is ERC20Base, IReward {
-    uint256 rarityLevel = 1;
+    uint256 public rarityLevel = 1;
 
     function getRarityLevel() external view returns (uint256) {
         return rarityLevel;

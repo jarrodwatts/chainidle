@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import CharacterPreview from "../components/CharacterCreation/CharacterPreview";
 import { useEffect, useRef, useState } from "react";
 import Character from "../types/Character";
-import characterProperties from "../const/character";
 import AnimationCanvas from "../components/CharacterActionAnimation/AnimationCanvas";
+import generateRandomCharacter from "../lib/generateRandomCharacter";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -23,28 +23,6 @@ const Home: NextPage = () => {
       type: 4,
     },
   });
-
-  const generateRandomCharacter = () => {
-    const character: Character = {};
-
-    // for each key, generate a random number between 0 and the length of the array
-    Object.entries(characterProperties).forEach(([key, value]) => {
-      if (key !== "base") {
-        if (Math.random() > 0.4) {
-          return;
-        }
-      }
-      const randomType = Math.floor(Math.random() * value.files.length);
-      const randomColor = Math.floor(Math.random() * value.colors.length);
-
-      character[key as keyof typeof characterProperties] = {
-        type: randomType,
-        color: randomColor,
-      };
-    });
-
-    return character;
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -88,7 +66,7 @@ const Home: NextPage = () => {
             variant="contained"
             color="primary"
             sx={{ my: 2 }}
-            onClick={() => router.push(`/character-creation`)}
+            onClick={() => router.push(`/play`)}
           >
             start playing
           </Button>

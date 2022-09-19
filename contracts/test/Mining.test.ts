@@ -6,7 +6,7 @@ import { ethers } from "hardhat";
 // Using this simplifies your tests and makes them run faster, by taking
 // advantage of Hardhat Network's snapshot functionality.
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { formatBytes32String, keccak256 } from "ethers/lib/utils";
+import { formatBytes32String } from "ethers/lib/utils";
 
 // `describe` is a Mocha function that allows you to organize your tests.
 // Having your tests organized makes debugging them easier. All Mocha
@@ -63,8 +63,8 @@ describe("Mining", function () {
     await mining.deployed();
 
     // Mint stone and iron to mining contract
-    await stone.connect(owner).mint(mining.address, 100);
-    await iron.connect(owner).mint(mining.address, 100);
+    await stone.connect(owner).mintTo(mining.address, 100);
+    await iron.connect(owner).mintTo(mining.address, 100);
 
     // === Set up Player Characters ===
     await playerCharacters.connect(owner).mintTo(addr1.address, "uri1");
@@ -74,13 +74,15 @@ describe("Mining", function () {
     // Expect me to own both token id 0 and 1 of player characters
     expect(await playerCharacters.balanceOf(addr1.address)).to.equal(2);
 
+    const upgraderRole = await playerCharacters.UPGRADER_ROLE();
+
     await playerCharacters
       .connect(owner)
-      .grantRole(formatBytes32String("UPGRADER_ROLE"), mining.address);
+      .grantRole(upgraderRole, mining.address);
 
     const miningHasRole = await playerCharacters
       .connect(addr1)
-      .hasRole(keccak256(formatBytes32String("sdasdasdasd")), mining.address);
+      .hasRole(formatBytes32String("UPGRADER_ROLE"), mining.address);
 
     console.log("miningHasRole", miningHasRole);
 
@@ -120,8 +122,8 @@ describe("Mining", function () {
     );
 
     // === Set up Stone + Iron ===
-    await stone.connect(owner).mint(mining.address, 100);
-    await iron.connect(owner).mint(mining.address, 100);
+    await stone.connect(owner).mintTo(mining.address, 100);
+    await iron.connect(owner).mintTo(mining.address, 100);
 
     // Fixtures can return anything you consider useful for your tests
     return {
@@ -191,6 +193,7 @@ describe("Mining", function () {
     console.log("E:", owedExp);
 
     // Try to stake again
+    // TODO: This breaks.
     await mining.connect(addr1).stake(1, basePickaxes.address, 0);
 
     // Expect mappings to be updated
