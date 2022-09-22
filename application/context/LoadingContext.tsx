@@ -1,15 +1,18 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
+import Character from "../types/Character";
 
 interface LoadingContextType {
   loading: {
     loading: boolean;
     message: string;
+    character?: Character;
   };
   setLoading: Dispatch<
     SetStateAction<{
       loading: boolean;
       message: string;
+      character?: Character;
     }>
   >;
 }
@@ -25,11 +28,13 @@ export default function LoadingContext({
   loading: {
     loading: boolean;
     message: string;
+    character?: Character;
   };
   setLoading: Dispatch<
     SetStateAction<{
       loading: boolean;
       message: string;
+      character?: Character;
     }>
   >;
 }) {

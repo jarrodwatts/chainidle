@@ -9,10 +9,15 @@ import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLa
 type Props = {
   character: Character;
   action: keyof typeof actions;
+  direction?: keyof typeof directions;
 };
 
 // Takes in a character and an action and renders the animation
-export default function AnimationCanvas({ character, action }: Props) {
+export default function AnimationCanvas({
+  character,
+  action,
+  direction,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [layerImages, setLayerImages] = useState<{
@@ -114,7 +119,7 @@ export default function AnimationCanvas({ character, action }: Props) {
                 (character[key]?.color as number) *
                   actions[action].frameSize.x *
                   actions[action].animationFrameLength,
-              directions["right"] * actions[action].frameSize.y,
+              directions[direction || "right"] * actions[action].frameSize.y,
               actions[action].frameSize.x,
               actions[action].frameSize.y,
               0,

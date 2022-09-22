@@ -2,53 +2,53 @@ import React, { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 import Character from "../types/Character";
 
-interface ErrorContextType {
-  error: {
-    error: boolean;
+interface SuccessContextType {
+  success: {
+    success: boolean;
     message: string;
     character?: Character;
   };
-  setError: Dispatch<
+  setSuccess: Dispatch<
     SetStateAction<{
-      error: boolean;
+      success: boolean;
       message: string;
       character?: Character;
     }>
   >;
 }
 
-const ErrorContextProvider = createContext({} as ErrorContextType);
+const SuccessContextProvider = createContext({} as SuccessContextType);
 
-export default function ErrorContext({
+export default function SuccessContext({
   children,
-  error,
-  setError,
+  success,
+  setSuccess,
 }: {
   children: any;
-  error: {
-    error: boolean;
+  success: {
+    success: boolean;
     message: string;
     character?: Character;
   };
-  setError: Dispatch<
+  setSuccess: Dispatch<
     SetStateAction<{
-      error: boolean;
+      success: boolean;
       message: string;
       character?: Character;
     }>
   >;
 }) {
   return (
-    <ErrorContextProvider.Provider
+    <SuccessContextProvider.Provider
       value={{
-        error,
-        setError,
+        success,
+        setSuccess,
       }}
     >
       {children}
-    </ErrorContextProvider.Provider>
+    </SuccessContextProvider.Provider>
   );
 }
 
 // export the hook so we can use it in other components.
-export const useErrorState = () => useContext(ErrorContextProvider);
+export const useSuccessState = () => useContext(SuccessContextProvider);

@@ -18,11 +18,13 @@
     "@thirdweb-dev/react": "latest",
     "@thirdweb-dev/sdk": "latest",
     "@thirdweb-dev/storage": "^0.2.7",
+    "@thirdweb-dev/auth": "latest",
     "@types/canvasjs": "^1.9.7",
     "canvas": "^2.9.3",
     "ethers": "latest",
     "next": "latest",
     "react": "latest",
+    "react-confetti": "^6.1.0",
     "react-dom": "latest"
   },
   "devDependencies": {

@@ -1,13 +1,9 @@
 import { Container, Grid, Typography } from "@mui/material";
-import {
-  useContract,
-  useAddress,
-  useOwnedNFTs,
-  ConnectWallet,
-} from "@thirdweb-dev/react";
+import { useContract, useAddress, useOwnedNFTs } from "@thirdweb-dev/react";
 import React, { useEffect } from "react";
 import CharacterCreationContainer from "../components/CharacterCreation/CharacterCreationContainer";
 import GameArea from "../components/game/GameArea";
+import ConnectWalletDonowall from "../components/overlay/ConnectWalletDonowall";
 import { PLAYER_CHARACTERS_ADDRESS } from "../const/contractAddresses";
 import { useLoadingState } from "../context/LoadingContext";
 
@@ -24,10 +20,14 @@ export default function Play() {
   );
 
   useEffect(() => {
+    if (!address) {
+      return;
+    }
+
     if (loadingNftBalance) {
       setLoading({
         loading: true,
-        message: "checking ur wallet...",
+        message: "loading ur characterz...",
       });
     } else {
       setLoading({
@@ -35,21 +35,17 @@ export default function Play() {
         message: "",
       });
     }
-  }, [loadingNftBalance, setLoading]);
+  }, [address, loadingNftBalance, setLoading]);
 
-  if (loading.loading || loadingNftBalance) {
-    return <div></div>;
+  if (!address) {
+    return <ConnectWalletDonowall />;
   }
 
-  if (ownedNfts === undefined) {
-    return (
-      <div>
-        <ConnectWallet />
-      </div>
-    );
+  if (loadingNftBalance) {
+    return null;
   }
 
-  if (ownedNfts.length === 0) {
+  if (ownedNfts?.length && ownedNfts.length === 0) {
     return (
       <Container maxWidth="lg">
         <CharacterCreationContainer />
@@ -82,6 +78,8 @@ export default function Play() {
           <Typography variant="body2" sx={{ mt: 3 }}>
             let&apos;s play
           </Typography>
+
+          <img src={ownedNfts?.[0].metadata.image || ""} />
 
           <GameArea />
         </Grid>

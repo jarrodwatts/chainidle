@@ -79,7 +79,7 @@ export default async function generateMintSignature(
   const ipfsHash = await storage.upload(canvas.toBuffer());
   console.log("IPFS HASH: ", ipfsHash);
 
-  const signature = await contract?.nft?.signature?.generate({
+  const signature = await contract?.erc721?.signature?.generate({
     metadata: {
       image: canvas.toDataURL("image/png"),
       name: "ChainIdle Character",

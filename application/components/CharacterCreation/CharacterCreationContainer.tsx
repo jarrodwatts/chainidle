@@ -10,15 +10,20 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 import { useLoadingState } from "../../context/LoadingContext";
+import useTransactionFn from "../../lib/enforce/useTransactionFn";
+import { useSuccessState } from "../../context/SuccessContext";
+import { useErrorState } from "../../context/ErrorContext";
 
 export default function CharacterCreationContainer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mobileScreenQuery = useMediaQuery("(max-width:1200px)");
   const address = useAddress();
-  const connectWallet = useMetamask();
+  const enforcer = useTransactionFn();
 
   const { contract } = useContract(PLAYER_CHARACTERS_ADDRESS);
   const { setLoading } = useLoadingState();
+  const { setError } = useErrorState();
+  const { setSuccess } = useSuccessState();
 
   const [character, setCharacter] = useState<Character>({
     base: {
@@ -36,6 +41,7 @@ export default function CharacterCreationContainer() {
       setLoading({
         loading: true,
         message: "minting ur character...",
+        character: character,
       });
 
       // Send the request to the server
@@ -52,9 +58,19 @@ export default function CharacterCreationContainer() {
 
       const signedPayload = await response.json();
 
-      const nft = await contract?.nft?.signature?.mint(signedPayload);
+      const nft = await contract?.erc721?.signature?.mint(signedPayload);
+
+      setSuccess({
+        success: true,
+        message: "woohoooooooooo",
+        character: character,
+      });
     } catch (error) {
       console.error(error);
+      setError({
+        error: true,
+        message: "oh no it died ...",
+      });
     } finally {
       setLoading({
         loading: false,
@@ -122,7 +138,7 @@ export default function CharacterCreationContainer() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => (address ? mintCharacter() : connectWallet())}
+                onClick={() => enforcer({ fn: mintCharacter }).fn()}
                 sx={{
                   mt: 2,
                   display: "flex",
@@ -130,7 +146,11 @@ export default function CharacterCreationContainer() {
                   height: 48,
                 }}
               >
-                {address ? "Mint My NFT" : "Connect Wallet"}
+                {
+                  enforcer({
+                    text: "Mint Character",
+                  }).text
+                }
               </Button>
             </Grid>
           </Grid>

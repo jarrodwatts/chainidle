@@ -1,13 +1,13 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import { useContract, useContractData } from "@thirdweb-dev/react";
+import { useContract, useContractRead } from "@thirdweb-dev/react";
 import { MINING_ADDRESS } from "../../const/contractAddresses";
 
 type Props = {};
 
 export default function GameArea({}: Props) {
   const { contract } = useContract(MINING_ADDRESS);
-  const { data: characterContractAddress } = useContractData(
+  const { data: characterContractAddress } = useContractRead(
     contract,
     "characterContract"
   );
