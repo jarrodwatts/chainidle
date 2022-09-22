@@ -2,11 +2,10 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 import Character from "../../types/Character";
-import { createCanvas, loadImage, Image } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
 import characterProperties from "../../const/character";
 import path from "path";
-import { IpfsStorage } from "@thirdweb-dev/storage";
 import { promises as fs } from "fs";
 import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
 
@@ -41,7 +40,6 @@ export default async function generateMintSignature(
   );
 
   for (const key of toDraw) {
-    console.log(key);
     if (character[key] === undefined) {
       continue;
     }
@@ -58,8 +56,6 @@ export default async function generateMintSignature(
     const img = await fs.readFile(fullPath);
     const spriteSheet = await loadImage(img);
 
-    console.log("here59");
-
     context.drawImage(
       spriteSheet,
       characterProperties[key].frameSize.x * character?.[key]?.color! * 8,
@@ -71,13 +67,7 @@ export default async function generateMintSignature(
       canvas.width,
       canvas.height
     );
-    console.log("Drew image for key: ", key);
   }
-
-  const storage = new IpfsStorage();
-
-  const ipfsHash = await storage.upload(canvas.toBuffer());
-  console.log("IPFS HASH: ", ipfsHash);
 
   const signature = await contract?.erc721?.signature?.generate({
     metadata: {
