@@ -5,32 +5,32 @@ const env = process.env.NODE_ENV;
 
 export const CHAIN_ID = env === "development" ? ChainId.Mumbai : ChainId.Mumbai;
 
-// https://thirdweb.com/mumbai/0xfa9498b12058056D33B7867FBAD64E6367Fc4B86/
+// https://thirdweb.com/mumbai/0x48293A6b8c907c015625A1B6CE52d4A2BDf81fB7/
 export const MINING_ADDRESS =
   env === "development"
-    ? "0xfa9498b12058056D33B7867FBAD64E6367Fc4B86"
-    : "0xfa9498b12058056D33B7867FBAD64E6367Fc4B86";
+    ? "0x48293A6b8c907c015625A1B6CE52d4A2BDf81fB7"
+    : "0x48293A6b8c907c015625A1B6CE52d4A2BDf81fB7";
 
-// https://thirdweb.com/mumbai/0x38a8F01B1a5642db4650726caCE8e8177c3967f2/
+// https://thirdweb.com/mumbai/0x648190e23d6aaC07007f472F9de69B0Dc53d0a09/
 export const PLAYER_CHARACTERS_ADDRESS =
   env === "development"
-    ? "0x38a8F01B1a5642db4650726caCE8e8177c3967f2"
-    : "0x38a8F01B1a5642db4650726caCE8e8177c3967f2";
+    ? "0x648190e23d6aaC07007f472F9de69B0Dc53d0a09"
+    : "0x648190e23d6aaC07007f472F9de69B0Dc53d0a09";
 
-// https://thirdweb.com/mumbai/0xB90f8ad1F071F805f2DdEF03650D138aC6492f9F/
+// https://thirdweb.com/mumbai/0xDef48AC1728B0C17047830F831b5da7CC1Bce665/
 export const PICKAXES_ADDRESS =
   env === "development"
-    ? "0xB90f8ad1F071F805f2DdEF03650D138aC6492f9F"
-    : "0xB90f8ad1F071F805f2DdEF03650D138aC6492f9F";
+    ? "0xDef48AC1728B0C17047830F831b5da7CC1Bce665"
+    : "0xDef48AC1728B0C17047830F831b5da7CC1Bce665";
 
-// https://thirdweb.com/mumbai/0xd60b3C58AAff3C6adCE699C4a8659E51Ea2EA002/
+// https://thirdweb.com/mumbai/0x2979Ed391CbF5d4243f7eE42709b66b95912CC99/
 export const IRON_ADDRESS =
   env === "development"
-    ? "0xd60b3C58AAff3C6adCE699C4a8659E51Ea2EA002"
-    : "0xd60b3C58AAff3C6adCE699C4a8659E51Ea2EA002";
+    ? "0x2979Ed391CbF5d4243f7eE42709b66b95912CC99"
+    : "0x2979Ed391CbF5d4243f7eE42709b66b95912CC99";
 
-// https://thirdweb.com/mumbai/0x22849F913B6f9CB00e5E1eB72A29a8896088dF5A/
+// https://thirdweb.com/mumbai/0x7a21d78baA2cdb273E68F564cc1b4f0d2d7fCF44/
 export const STONE_ADDRESS =
   env === "development"
-    ? "0x22849F913B6f9CB00e5E1eB72A29a8896088dF5A"
-    : "0x22849F913B6f9CB00e5E1eB72A29a8896088dF5A";
+    ? "0x7a21d78baA2cdb273E68F564cc1b4f0d2d7fCF44"
+    : "0x7a21d78baA2cdb273E68F564cc1b4f0d2d7fCF44";

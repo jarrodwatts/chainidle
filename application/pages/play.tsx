@@ -79,8 +79,6 @@ export default function Play() {
             let&apos;s play
           </Typography>
 
-          <img src={ownedNfts?.[0].metadata.image || ""} />
-
           <GameArea />
         </Grid>
       </Container>
