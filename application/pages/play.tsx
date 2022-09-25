@@ -45,7 +45,7 @@ export default function Play() {
     return null;
   }
 
-  if (ownedNfts?.length && ownedNfts.length === 0) {
+  if (!ownedNfts || ownedNfts.length === 0) {
     return (
       <Container maxWidth="lg">
         <CharacterCreationContainer />
