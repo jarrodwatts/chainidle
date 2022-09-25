@@ -1,22 +1,22 @@
 {
   "playerCharacters": {
     "contractName": "PlayerCharacters",
-    "deployedAddress": "0x648190e23d6aaC07007f472F9de69B0Dc53d0a09"
+    "deployedAddress": "0xFc9acAdceC225b903b973a7d6ba4B7750172E8dc"
   },
   "pickaxes": {
     "contractName": "Pickaxes",
-    "deployedAddress": "0xDef48AC1728B0C17047830F831b5da7CC1Bce665"
+    "deployedAddress": "0x0D785Af2B384D571b88c21468410E8f63A368D98"
   },
   "stone": {
     "contractName": "Stone",
-    "deployedAddress": "0x7a21d78baA2cdb273E68F564cc1b4f0d2d7fCF44"
+    "deployedAddress": "0xBE40586769F601a62DD063D6147DBeD146cae3F3"
   },
   "iron": {
     "contractName": "Iron",
-    "deployedAddress": "0x2979Ed391CbF5d4243f7eE42709b66b95912CC99"
+    "deployedAddress": "0xA988C578eA0eBC224E46eef4FF6CB8912710da2c"
   },
   "mining": {
     "contractName": "Mining",
-    "deployedAddress": "0x48293A6b8c907c015625A1B6CE52d4A2BDf81fB7"
+    "deployedAddress": "0xC48b7E67a3b1e2c45FB77fBa020E5C9d7C49Aef2"
   }
 }
