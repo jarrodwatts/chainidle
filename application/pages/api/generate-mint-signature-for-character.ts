@@ -2,12 +2,12 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PLAYER_CHARACTERS_ADDRESS } from "../../const/contractAddresses";
 import Character from "../../types/Character";
-import { createCanvas, loadImage } from "canvas";
 import orderCharacterKeysforLayeredDisplay from "../../lib/orderCharacterKeysForDisplay";
 import characterProperties from "../../const/character";
 import path from "path";
 import { promises as fs } from "fs";
 import reorderCharacterKeysForLayering from "../../lib/reorderCharacterKeysForLayering";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 
 export default async function generateMintSignature(
   req: NextApiRequest,
