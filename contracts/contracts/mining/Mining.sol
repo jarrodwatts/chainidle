@@ -260,6 +260,11 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
     function calculateOwedExperiencePoints(
         address _playerAddress
     ) public view returns (uint256) {
+        // If the player has no character or tool staked, return 0 experience points
+        if (stakedCharacters[_playerAddress].isStaked == false || stakedTools[_playerAddress].isStaked == false) {
+            return 0;
+        }
+
         // TODO: Probably figure this out a bit more,
         // For now, we just give 1 experience point per block.
         return 1 * (block.timestamp - playerLastUpdate[_playerAddress]);
