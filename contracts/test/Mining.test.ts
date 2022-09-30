@@ -139,23 +139,8 @@ describe("Mining", function () {
   }
 
   it("General flow 1", async function () {
-    const {
-      owner,
-      addr1,
-      playerCharacters,
-      basePickaxes,
-      mining,
-      iron,
-      stone,
-    } = await loadFixture(setupMiningFixture);
-
-    console.log("Owner:", owner.address);
-    console.log("Addr1:", addr1.address);
-    console.log("Mining:", mining.address);
-    console.log("PlayerCharacters:", playerCharacters.address);
-    console.log("BasePickaxes:", basePickaxes.address);
-    console.log("Stone:", stone.address);
-    console.log("Iron:", iron.address);
+    const { addr1, playerCharacters, basePickaxes, mining, stone } =
+      await loadFixture(setupMiningFixture);
 
     await basePickaxes.deployed();
 
@@ -192,6 +177,11 @@ describe("Mining", function () {
     console.log("R:", owedRewards);
     console.log("E:", owedExp);
 
+    expect(owedRewards.length).to.equal(1);
+    expect(owedRewards[0].amount).to.equal(100);
+    expect(owedRewards[0].rewardContract).to.equal(stone.address);
+    expect(owedExp).to.equal(100);
+
     // Try to stake again
     // TODO: This breaks.
     await mining.connect(addr1).stake(1, basePickaxes.address, 0);
@@ -205,5 +195,15 @@ describe("Mining", function () {
     expect(stakedTool2.isStaked).to.equal(true);
     expect(stakedTool2.toolTokenId).to.equal(0);
     expect(await basePickaxes.balanceOf(addr1.address, 0)).to.equal(4);
+  });
+
+  it("Returns empty array of rewards for a wallet that hasn't ever staked", async function () {
+    const { addr1, mining } = await loadFixture(setupMiningFixture);
+
+    const owedRewards = await mining
+      .connect(addr1)
+      .calculateOwedRewards(addr1.address);
+
+    expect(owedRewards.length).to.equal(0);
   });
 });

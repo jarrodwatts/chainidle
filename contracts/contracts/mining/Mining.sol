@@ -221,6 +221,11 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
     function calculateOwedRewards(
         address _playerAddress
     ) public view returns (Reward[] memory) {
+        // If the player has no character or tool staked, return 0 rewards
+        if (stakedCharacters[_playerAddress].isStaked == false || stakedTools[_playerAddress].isStaked == false) {
+            return new Reward[](0);
+        }
+
         // The power level determines the rarity level of the rewards that can be given.
         // from the rewardsContracts array (they are in order of rarity)
         ITool.ToolStat memory toolPowerStats = stakedTools[_playerAddress].toolContract.getToolStats(
