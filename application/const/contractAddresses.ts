@@ -8,8 +8,8 @@ export const CHAIN_ID = env === "development" ? ChainId.Mumbai : ChainId.Mumbai;
 // https://thirdweb.com/mumbai/0x48293A6b8c907c015625A1B6CE52d4A2BDf81fB7/
 export const MINING_ADDRESS =
   env === "development"
-    ? "0xC48b7E67a3b1e2c45FB77fBa020E5C9d7C49Aef2"
-    : "0xC48b7E67a3b1e2c45FB77fBa020E5C9d7C49Aef2";
+    ? "0xef9902bE213933Ea60414C33724c611B623B32aB"
+    : "0xef9902bE213933Ea60414C33724c611B623B32aB";
 
 // https://thirdweb.com/mumbai/0x648190e23d6aaC07007f472F9de69B0Dc53d0a09/
 export const PLAYER_CHARACTERS_ADDRESS =

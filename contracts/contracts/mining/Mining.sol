@@ -19,9 +19,9 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
 
     // Character NFTs
     PlayerCharacters public characterContract;
-    // Tokens addresses that can be rewarded
+    // Tools addresses that can be rewarded
     ITool[] public toolsContracts;
-    // Tools addresses that can be staked
+    // Token addresses that can be staked
     IReward[] public rewardsContracts;
 
     // Mapping of player addresses to their staked tokens
@@ -268,6 +268,15 @@ contract Mining is IERC721Receiver, IStake, ReentrancyGuard {
         // TODO: Probably figure this out a bit more,
         // For now, we just give 1 experience point per block.
         return 1 * (block.timestamp - playerLastUpdate[_playerAddress]);
+    }
+
+    function viewAllToolAddresses() external view returns (ITool[] memory) {
+        // Iterate through  all the tools and return them
+        ITool[] memory tools = new ITool[](toolsContracts.length);
+        for (uint256 i = 0; i < toolsContracts.length; i++) {
+            tools[i] = toolsContracts[i];
+        }
+        return tools;
     }
 
     function onERC721Received(

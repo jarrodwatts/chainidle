@@ -17,6 +17,9 @@ import formatNftQueryToCharacter from "../../lib/format/formatNftQueryToCharacte
 import PlayerCharacterStats from "./PlayerCharacterStats";
 import { Grid } from "@mui/material";
 import Inventory from "./Inventory";
+import AnimationCanvas from "../CharacterActionAnimation/AnimationCanvas";
+import GameplayAnimation from "./GameplayAnimation";
+import GameplayContainer from "./GameplayContainer";
 
 // === Game Context ===
 type GameContextType = {
@@ -52,8 +55,6 @@ export default function GameArea({}: Props) {
   const { data: ownedCharacters, isLoading: loadingOwnedCharacters } =
     useOwnedNFTs(characterContract, address);
 
-  console.log(ownedCharacters);
-
   return (
     <GameContext.Provider
       value={{
@@ -80,7 +81,7 @@ export default function GameArea({}: Props) {
           {/* Inventory */}
         </Grid>
         <Grid item xs={12} md={9}>
-          <Inventory />
+          <GameplayContainer />
         </Grid>
       </Grid>
     </GameContext.Provider>

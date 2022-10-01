@@ -7,18 +7,18 @@ import { useGameContext } from "./GameArea";
 type Props = {};
 
 export default function PlayerCharacterStats({}: Props) {
-  const { ownedCharacter, characterContract } = useGameContext();
+  const { ownedCharacter, characterContract, activeSkill } = useGameContext();
   const {
     data: character,
     nft: characterNft,
     isLoading: loadingCharacter,
   } = ownedCharacter;
 
-  const { data } = useContractRead(
+  const { data: currentSkillLevel } = useContractRead(
     characterContract,
     "getSkillLevel",
     characterNft?.metadata.id,
-    skills["pickaxe"].contractSkillName
+    skills[activeSkill.get()].contractSkillName
   );
 
   if (loadingCharacter) {
@@ -38,17 +38,19 @@ export default function PlayerCharacterStats({}: Props) {
     >
       <Grid item xs={12}>
         <img
-          src={characterNft?.metadata?.image}
-          alt={characterNft?.metadata?.name}
+          src={(characterNft?.metadata?.image as string) || ""}
+          alt={(characterNft?.metadata?.name as string) || ""}
         />
       </Grid>
 
       <Grid container item xs={12} alignItems="center">
         <Grid item xs={6}>
-          <Typography variant="body2">Mining</Typography>
+          <Typography variant="body2">
+            {skills[activeSkill.get()].displayName}
+          </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="h6">{data?.toNumber()}</Typography>
+          <Typography variant="h6">{currentSkillLevel?.toNumber()}</Typography>
         </Grid>
       </Grid>
     </Grid>

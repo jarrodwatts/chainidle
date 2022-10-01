@@ -10,10 +10,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import skills from "../const/skills";
 import { useGameContext } from "./game/GameArea";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 
 export default function GameSidebar() {
+  const router = useRouter();
   const gameContext = useGameContext();
 
   return (
@@ -41,9 +43,10 @@ export default function GameSidebar() {
           {Object.entries(skills).map(([skillKey, skillVal], index) => (
             <ListItem key={index} disablePadding>
               <ListItemButton
-                onClick={() =>
-                  gameContext.activeSkill.set(skillKey as keyof typeof skills)
-                }
+                onClick={() => {
+                  gameContext.activeSkill.set(skillKey as keyof typeof skills);
+                  router.push(`/play`);
+                }}
               >
                 <ListItemIcon>
                   <img src={skillVal.icon} alt={skillVal.displayName} />
@@ -60,7 +63,7 @@ export default function GameSidebar() {
           not skillz
         </Typography>
         <List>
-          <ListItem disablePadding>
+          <ListItem disablePadding onClick={() => router.push(`/shop`)}>
             <ListItemButton>
               <ListItemIcon></ListItemIcon>
               <ListItemText primary={"buy stuff"} />

@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import initSDK from "../util/initSDK";
 
 export default async function setupClaimPhasesForPickaxes(
@@ -21,6 +22,7 @@ export default async function setupClaimPhasesForPickaxes(
       claimConditions: [
         {
           startTime: new Date(Date.now()),
+          maxQuantity: "unlimited",
         },
       ],
     },
