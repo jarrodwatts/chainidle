@@ -52,6 +52,8 @@ export default function GameArea({}: Props) {
   const { contract: characterContract } = useContract(
     PLAYER_CHARACTERS_ADDRESS
   );
+
+  // TODO: This isn't going to work when the user stakes onto something
   const { data: ownedCharacters, isLoading: loadingOwnedCharacters } =
     useOwnedNFTs(characterContract, address);
 

@@ -1,16 +1,17 @@
-import { Container, Grid, Typography } from "@mui/material";
+import { Button, Container, Grid, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import React from "react";
 import GameSidebar from "../components/GameSidebar";
-import ShopForSkillContainer from "../components/shop/ShopForSkillContainer";
+import ShopsForSkillContainer from "../components/shop/ShopsForSkillContainer";
 import skills from "../const/skills";
 
 type Props = {};
 
-export default function shop({}: Props) {
+export default function Shop({}: Props) {
+  const router = useRouter();
+
   return (
     <>
-      <GameSidebar />
-
       <Container
         maxWidth="lg"
         sx={{
@@ -36,6 +37,15 @@ export default function shop({}: Props) {
           <Typography variant="body2" sx={{ mt: 1 }}>
             here u can buy stuff
           </Typography>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 3 }}
+            onClick={() => router.push("/play")}
+          >
+            back to game
+          </Button>
         </Grid>
 
         <Grid container direction="column" alignItems="center">
@@ -51,7 +61,7 @@ export default function shop({}: Props) {
               sx={{ mt: 2 }}
             >
               <Typography variant="h3">{skillValue.displayName}</Typography>
-              <ShopForSkillContainer skill={skillValue} />
+              <ShopsForSkillContainer skill={skillValue} />
             </Grid>
           ))}
         </Grid>

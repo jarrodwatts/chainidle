@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import initSDK from "../util/initSDK";
 
 export default async function setupClaimPhasesForPickaxes(
